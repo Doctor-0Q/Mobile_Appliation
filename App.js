@@ -4,12 +4,13 @@ import { StyleSheet, Text, View, ScrollView, SafeAreaView } from 'react-native';
 // import Tasks from './components/Tasks';
 // import UpcomingSchedule from './components/UpComingSchduele';
 import Dashboard from './components/Dashboard/Dashboard';
-
+import SettingPage from './components/settings/SettingPage';
 
 export default function App() {
   return (
-    <ScrollView >
-      <Dashboard />
+    <ScrollView className='bg-[#F9F9F9] '>
+      {/* <Dashboard /> */}
+      <SettingPage/>
     </ScrollView>
   );
 }
