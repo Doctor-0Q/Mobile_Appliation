@@ -4,6 +4,7 @@ import AddPatients from "./components/AddPatients/addPatients";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Messages from "./components/messages/Messages";
 import SettingPage from "./components/settings/SettingPage";
+import Patients from "./components/Patients/patients";
 
 export default function App() {
   return (
@@ -11,7 +12,8 @@ export default function App() {
       {/* <Dashboard /> */}
       {/* <SettingPage/> */}
       {/* <Messages/>*/}
-      <AddPatients />
+      {/* <AddPatients /> */}
+      <Patients />
     </ScrollView>
   );
 }
