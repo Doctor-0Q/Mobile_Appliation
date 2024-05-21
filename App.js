@@ -23,7 +23,7 @@ import Analytics from "./components/Analytics";
 import Support from "./components/Support";
 import SearchBar from "./components/pages/SearchBar";
 import { ScrollView } from "react-native-gesture-handler";
-import DoctorAppointment from './components/LandingPages/DoctorAppointment'
+import Doctorprofile from "./components/LandingPages/doctorprofile/Doctorprofile.jsx"
 const Drawer = createDrawerNavigator();
 const App = () => {
   const [user, setUser] = useState(!true)
@@ -136,7 +136,7 @@ const App = () => {
           <StatusBar style="auto" />
         </NavigationContainer>
       </>}
-      <DoctorAppointment />
+      <Doctorprofile />
     </>
 
   );

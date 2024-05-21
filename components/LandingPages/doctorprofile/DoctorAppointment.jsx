@@ -67,7 +67,7 @@ const Calendar = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: 2,
     backgroundColor: "#fff",
   },
   header: {

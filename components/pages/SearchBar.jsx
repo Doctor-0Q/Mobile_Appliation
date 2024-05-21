@@ -24,7 +24,7 @@ const SearchBar = () => {
     return (
         <>
             {search && (
-                <View className="bg-[#000000ba] h-[1500px] border z-10 w-[100vw] absolute">
+                <View className="bg-[#000000ba] h-[2500px] border z-10 w-[100vw] absolute">
                     <View className="bg-white h-8 rounded-3xl flex flex-row items-center  p-1 w-60 m-auto">
                         <View>
                             <AntDesign name="search1" size={20} color="#828282" />
