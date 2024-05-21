@@ -11,9 +11,11 @@ import { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { doctorProfile } from "../../utils/ProfileData";
+import { useNavigation } from "@react-navigation/native";
+import { TouchableOpacity } from "react-native";
 
 // import { doctorProfile, patientProfile } from "./utils/ProfileData";
-import { TouchableOpacity } from "react-native";
+// import { TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
 const StarRating = ({ rating }) => {
@@ -66,6 +68,11 @@ export default App = () => {
       );
       setFilteredDoctors(filtered);
     }
+  };
+  const navigation = useNavigation();
+
+  const navigateToDoctorProfile = (doctor) => {
+    navigation.navigate("DoctorProfilePage", { doctor });
   };
 
   return (
@@ -166,33 +173,37 @@ export default App = () => {
               renderItem={({ item }) => (
                 <View>
                   <View className="border-2 rounded-lg mt-1 px-3  mb-1 pb-1 pt-1">
-                    <View className="wrapper flex flex-row  border-gray-300  rounded-lg space-x-7 ">
-                      <View className="image">
-                        <Image
-                          className="w-24 h-24 mt-1 mb-1" // "w-[85] h-[90] mt-1"
-                          source={item.image}
-                          resizeMode="contain"
-                        />
-                      </View>
-                      <View className="description">
-                        <Text className="text-xl font-bold">{item.name}</Text>
-                        <Text className="text-[11px] text-gray-500 ">
-                          {item.speciality}
-                        </Text>
-                        <StarRating rating={parseFloat(item.starRating)} />
-                        {/* <StarRating /> */}
-                        <View className="Consultation flex flex-row gap-3">
+                    <TouchableOpacity
+                      onPress={() => navigateToDoctorProfile(item)}
+                    >
+                      <View className="wrapper flex flex-row  border-gray-300  rounded-lg space-x-7 ">
+                        <View className="image">
                           <Image
-                            source={item.consultationImage}
-                            className="h-4 w-4"
+                            className="w-24 h-24 mt-1 mb-1" // "w-[85] h-[90] mt-1"
+                            source={item.image}
                             resizeMode="contain"
                           />
-                          <Text className="text-[10px] text-gray-500">
-                            {item.consultationTime}
+                        </View>
+                        <View className="description">
+                          <Text className="text-xl font-bold">{item.name}</Text>
+                          <Text className="text-[11px] text-gray-500 ">
+                            {item.speciality}
                           </Text>
+                          <StarRating rating={parseFloat(item.starRating)} />
+                          {/* <StarRating /> */}
+                          <View className="Consultation flex flex-row gap-3">
+                            <Image
+                              source={item.consultationImage}
+                              className="h-4 w-4"
+                              resizeMode="contain"
+                            />
+                            <Text className="text-[10px] text-gray-500">
+                              {item.consultationTime}
+                            </Text>
+                          </View>
                         </View>
                       </View>
-                    </View>
+                    </TouchableOpacity>
                   </View>
                 </View>
               )}
@@ -207,7 +218,7 @@ export default App = () => {
         </View>
       </View>
       {/* </ScrollView> */}
-      <View className="Navbar bg-white h-[70]  border-2 rounded-tl-lg rounded-tr-lg shadow-md shadow-top blur-xl shadow-slate-600  absolute bottom-0 left-0 right-0 justify-center items-center  ">
+      {/* <View className="Navbar bg-white h-[70]  border-2 rounded-tl-lg rounded-tr-lg shadow-md shadow-top blur-xl shadow-slate-600  absolute bottom-0 left-0 right-0 justify-center items-center  ">
         <View className="flex flex-row   space-x-16">
           <View className="bg-green-900   px-6 py-1 rounded-xl">
             <Image
@@ -228,7 +239,7 @@ export default App = () => {
             className="w-6 h-6"
           />
         </View>
-      </View>
+      </View> */}
     </SafeAreaView>
   );
 };

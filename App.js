@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Image, View, Text, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createStackNavigator } from "@react-navigation/stack";
 import { StatusBar } from "expo-status-bar";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Messages from "./components/messages/Messages";
@@ -22,15 +23,18 @@ import Schedule from "./components/Schedule";
 import Analytics from "./components/Analytics";
 import Support from "./components/Support";
 import SearchBar from "./components/pages/SearchBar";
-import { ScrollView } from "react-native-gesture-handler";
-import Doctorprofile from "./components/LandingPages/doctorprofile/Doctorprofile.jsx"
+import Doctorprofile from "./components/LandingPages/doctorprofile/Doctorprofile";
+import HomePage from "./components/HomePage/HomePage";
+
 const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
+
 const App = () => {
-  const [user, setUser] = useState(!true)
+  const [user, setUser] = useState(!true);
+
   return (
     <>
-      {user && <>
-
+      {user && (
         <NavigationContainer>
           <Drawer.Navigator
             drawerContent={(props) => <CustomDrawerContent {...props} />}
@@ -42,29 +46,27 @@ const App = () => {
                 drawerLabel: "Dashboard",
                 title: "Dashboard",
                 headerRight: () => <SearchBar />,
-                drawerIcon: () => (
-                  <Image source={dashboard} className="h-6 w-6" />
-                ),
+                drawerIcon: () => <Image source={dashboard} className="h-6 w-6" />,
               }}
             />
             <Drawer.Screen
-              name="settings"
+              name="Schedule"
               component={Schedule}
               options={{
                 drawerLabel: "Schedule",
                 title: "Schedule",
                 headerRight: () => <SearchBar />,
-                drawerIcon: () => <Image source={schedule} className="h-6 w-6" />, // Apply styles using style prop
+                drawerIcon: () => <Image source={schedule} className="h-6 w-6" />,
               }}
             />
             <Drawer.Screen
-              name="tasks"
+              name="Tasks"
               component={Tasks}
               options={{
                 drawerLabel: "Tasks",
                 title: "Tasks",
                 headerRight: () => <SearchBar />,
-                drawerIcon: () => <Image source={task} className="h-6 w-6" />, // Apply styles using style prop
+                drawerIcon: () => <Image source={task} className="h-6 w-6" />,
               }}
             />
             <Drawer.Screen
@@ -74,7 +76,7 @@ const App = () => {
                 drawerLabel: "Patients",
                 title: "Patients",
                 headerRight: () => <SearchBar />,
-                drawerIcon: () => <Image source={patients} className="h-6 w-6" />, // Apply styles using style prop
+                drawerIcon: () => <Image source={patients} className="h-6 w-6" />,
               }}
             />
             <Drawer.Screen
@@ -84,7 +86,7 @@ const App = () => {
                 drawerLabel: "Messages",
                 title: "Messages",
                 headerRight: () => <SearchBar />,
-                drawerIcon: () => <Image source={message} className="h-6 w-6" />, // Apply styles using style prop
+                drawerIcon: () => <Image source={message} className="h-6 w-6" />,
               }}
             />
             <Drawer.Screen
@@ -94,10 +96,9 @@ const App = () => {
                 drawerLabel: "Analytics",
                 title: "Analytics",
                 headerRight: () => <SearchBar />,
-                drawerIcon: () => <Image source={analytic} className="h-6 w-6" />, // Apply styles using style prop
+                drawerIcon: () => <Image source={analytic} className="h-6 w-6" />,
               }}
             />
-
             <Drawer.Screen
               name="Settings"
               component={SettingPage}
@@ -105,7 +106,7 @@ const App = () => {
                 drawerLabel: "Settings",
                 title: "Settings",
                 headerRight: () => <SearchBar />,
-                drawerIcon: () => <Image source={setting} className="h-6 w-6" />, // Apply styles using style prop
+                drawerIcon: () => <Image source={setting} className="h-6 w-6" />,
               }}
             />
             <Drawer.Screen
@@ -115,30 +116,32 @@ const App = () => {
                 drawerLabel: "Support",
                 title: "Support",
                 headerRight: () => <SearchBar />,
-                drawerIcon: () => <Image source={support} className="h-6 w-6" />, // Apply styles using style prop
+                drawerIcon: () => <Image source={support} className="h-6 w-6" />,
               }}
             />
-            <>
-              <Drawer.Screen
-                name="Logut"
-                component={Support}
-                // className='absolute bottom-0'
-                options={{
-                  drawerLabel: "Logut",
-                  title: "Logut",
-                  headerRight: () => <SearchBar />,
-                  drawerIcon: () => <Image source={logut} className="h-6 w-6" />, // Apply styles using style prop
-                }}
-              />
-            </>
+            <Drawer.Screen
+              name="Logut"
+              component={Support}
+              options={{
+                drawerLabel: "Logut",
+                title: "Logut",
+                headerRight: () => <SearchBar />,
+                drawerIcon: () => <Image source={logut} className="h-6 w-6" />,
+              }}
+            />
           </Drawer.Navigator>
-
           <StatusBar style="auto" />
         </NavigationContainer>
-      </>}
-      <Doctorprofile />
+      )}
+      {!user && (
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen name="Home" component={HomePage} />
+            <Stack.Screen name="DoctorProfilePage" component={Doctorprofile} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      )}
     </>
-
   );
 };
 
