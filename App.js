@@ -25,12 +25,15 @@ import Support from "./components/Support";
 import SearchBar from "./components/pages/SearchBar";
 import Doctorprofile from "./components/LandingPages/doctorprofile/Doctorprofile";
 import HomePage from "./components/HomePage/HomePage";
-
+import SignIn from './components/LandingPages/SignIn'
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/Ionicons'; // Example icon library
 
 const App = () => {
   const [user, setUser] = useState(!true);
+  const Tab = createBottomTabNavigator();
 
   return (
     <>
@@ -136,10 +139,46 @@ const App = () => {
       {!user && (
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen name="signin" component={SignIn} />
             <Stack.Screen name="Home" component={HomePage} />
             <Stack.Screen name="DoctorProfilePage" component={Doctorprofile} />
           </Stack.Navigator>
         </NavigationContainer>
+        // <NavigationContainer>
+        //   <Tab.Navigator
+        //     screenOptions={({ route }) => ({
+        //       tabBarIcon: ({ focused, color, size }) => {
+        //         let iconName;
+
+        //         if (route.name === 'Home') {
+        //           iconName = focused ? 'home' : 'home-outline';
+        //         } else if (route.name === 'Search') {
+        //           iconName = focused ? 'search' : 'search-outline';
+        //         } else if (route.name === 'Notifications') {
+        //           iconName = focused ? 'notifications' : 'notifications-outline';
+        //         } else if (route.name === 'Profile') {
+        //           iconName = focused ? 'person' : 'person-outline';
+        //         }
+
+        //         // You can return any component that you like here!
+        //         return <Icon name={iconName} size={size} color={color} />;
+        //       },
+        //       tabBarActiveTintColor: 'teal',
+        //       tabBarInactiveTintColor: 'gray',
+        //       tabBarStyle: {
+        //         height: 70,
+        //         paddingVertical: 10,
+        //         borderTopWidth: 1,
+        //         borderTopColor: 'lightgray'
+        //       }
+        //     })}
+        //   >
+        //     <Tab.Screen name="Home" component={HomePage} />
+        //     <Tab.Screen name="Search" component={SettingPage} />
+        //     <Tab.Screen name="Notifications" component={Support} />
+        //     <Tab.Screen name="Profile" component={Tasks} />
+        //   </Tab.Navigator>
+        // </NavigationContainer>
       )}
     </>
   );
