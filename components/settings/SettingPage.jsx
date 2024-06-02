@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   SafeAreaView,
+  ScrollView,
 } from "react-native";
 
 import question from "../../assets/images/que.png";
@@ -25,6 +26,7 @@ export default function SettingPage() {
   };
 
   return (
+    <ScrollView>
     <SafeAreaView>
       <View className="mt-6 mx-3">
         <Text className="ml-3">Settings</Text>
@@ -158,5 +160,6 @@ export default function SettingPage() {
         </View>
       </View>
     </SafeAreaView>
+    </ScrollView>
   );
 }
