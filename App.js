@@ -7,16 +7,7 @@ import { StatusBar } from "expo-status-bar";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Messages from "./components/messages/Messages";
 import SettingPage from "./components/settings/SettingPage";
-import dashboard from "./assets/dashboard/dashboard.png";
 import CustomDrawerContent from "./components/CustomDrawerContent";
-import setting from "./assets/dashboard/setting.png";
-import message from "./assets/dashboard/mail.png";
-import schedule from "./assets/dashboard/schedule.png";
-import task from "./assets/dashboard/task.png";
-import patients from "./assets/dashboard/people.png";
-import support from "./assets/dashboard/support.png";
-import analytic from "./assets/dashboard/analytic.png";
-import logut from "./assets/dashboard/logut.png";
 import Tasks from "./components/Tasks";
 import Patients from "./components/Patients";
 import Schedule from "./components/Schedule";
@@ -25,19 +16,29 @@ import Support from "./components/Support";
 import SearchBar from "./components/pages/SearchBar";
 import Doctorprofile from "./components/LandingPages/doctorprofile/Doctorprofile";
 import HomePage from "./components/HomePage/HomePage";
-import SignIn from './components/LandingPages/SignIn'
-const Drawer = createDrawerNavigator();
-const Stack = createStackNavigator();
+import SignIn from './components/LandingPages/SignIn';
+import dashboard from "./assets/dashboard/dashboard.png";
+import setting from "./assets/dashboard/setting.png";
+import message from "./assets/dashboard/mail.png";
+import schedule from "./assets/dashboard/schedule.png";
+import task from "./assets/dashboard/task.png";
+import patients from "./assets/dashboard/people.png";
+import support from "./assets/dashboard/support.png";
+import analytic from "./assets/dashboard/analytic.png";
+import logut from "./assets/dashboard/logut.png";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons'; // Example icon library
 
+const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
 const App = () => {
   const [user, setUser] = useState(!true);
-  const Tab = createBottomTabNavigator();
 
   return (
     <>
-      {user && (
+      {user ? (
         <NavigationContainer>
           <Drawer.Navigator
             drawerContent={(props) => <CustomDrawerContent {...props} />}
@@ -49,7 +50,7 @@ const App = () => {
                 drawerLabel: "Dashboard",
                 title: "Dashboard",
                 headerRight: () => <SearchBar />,
-                drawerIcon: () => <Image source={dashboard} className="h-6 w-6" />,
+                drawerIcon: () => <Image source={dashboard} style={styles.icon} />,
               }}
             />
             <Drawer.Screen
@@ -59,7 +60,7 @@ const App = () => {
                 drawerLabel: "Schedule",
                 title: "Schedule",
                 headerRight: () => <SearchBar />,
-                drawerIcon: () => <Image source={schedule} className="h-6 w-6" />,
+                drawerIcon: () => <Image source={schedule} style={styles.icon} />,
               }}
             />
             <Drawer.Screen
@@ -69,7 +70,7 @@ const App = () => {
                 drawerLabel: "Tasks",
                 title: "Tasks",
                 headerRight: () => <SearchBar />,
-                drawerIcon: () => <Image source={task} className="h-6 w-6" />,
+                drawerIcon: () => <Image source={task} style={styles.icon} />,
               }}
             />
             <Drawer.Screen
@@ -79,7 +80,7 @@ const App = () => {
                 drawerLabel: "Patients",
                 title: "Patients",
                 headerRight: () => <SearchBar />,
-                drawerIcon: () => <Image source={patients} className="h-6 w-6" />,
+                drawerIcon: () => <Image source={patients} style={styles.icon} />,
               }}
             />
             <Drawer.Screen
@@ -89,7 +90,7 @@ const App = () => {
                 drawerLabel: "Messages",
                 title: "Messages",
                 headerRight: () => <SearchBar />,
-                drawerIcon: () => <Image source={message} className="h-6 w-6" />,
+                drawerIcon: () => <Image source={message} style={styles.icon} />,
               }}
             />
             <Drawer.Screen
@@ -99,7 +100,7 @@ const App = () => {
                 drawerLabel: "Analytics",
                 title: "Analytics",
                 headerRight: () => <SearchBar />,
-                drawerIcon: () => <Image source={analytic} className="h-6 w-6" />,
+                drawerIcon: () => <Image source={analytic} style={styles.icon} />,
               }}
             />
             <Drawer.Screen
@@ -109,7 +110,7 @@ const App = () => {
                 drawerLabel: "Settings",
                 title: "Settings",
                 headerRight: () => <SearchBar />,
-                drawerIcon: () => <Image source={setting} className="h-6 w-6" />,
+                drawerIcon: () => <Image source={setting} style={styles.icon} />,
               }}
             />
             <Drawer.Screen
@@ -119,7 +120,7 @@ const App = () => {
                 drawerLabel: "Support",
                 title: "Support",
                 headerRight: () => <SearchBar />,
-                drawerIcon: () => <Image source={support} className="h-6 w-6" />,
+                drawerIcon: () => <Image source={support} style={styles.icon} />,
               }}
             />
             <Drawer.Screen
@@ -129,61 +130,72 @@ const App = () => {
                 drawerLabel: "Logut",
                 title: "Logut",
                 headerRight: () => <SearchBar />,
-                drawerIcon: () => <Image source={logut} className="h-6 w-6" />,
+                drawerIcon: () => <Image source={logut} style={styles.icon} />,
               }}
             />
           </Drawer.Navigator>
           <StatusBar style="auto" />
         </NavigationContainer>
-      )}
-      {!user && (
+      ) : (
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Home">
-            <Stack.Screen name="signin" component={SignIn} />
-            <Stack.Screen name="Home" component={HomePage} />
-            <Stack.Screen name="DoctorProfilePage" component={Doctorprofile} />
-          </Stack.Navigator>
+          <Tab.Navigator
+            screenOptions={({ route }) => ({
+              tabBarIcon: ({ focused, color, size }) => {
+                let iconName;
+
+                if (route.name === 'Home') {
+                  iconName = focused ? 'home' : 'home-outline';
+                } else if (route.name === 'Search') {
+                  iconName = focused ? 'search' : 'search-outline';
+                } else if (route.name === 'Notifications') {
+                  iconName = focused ? 'notifications' : 'notifications-outline';
+                } else if (route.name === 'Profile') {
+                  iconName = focused ? 'person' : 'person-outline';
+                } else if (route.name === 'location') {
+                  iconName = focused ? 'location' : 'location-outline';
+                }
+
+                return (
+                  <View style={focused ? styles.focusedIconContainer : null}>
+                    <Icon name={iconName} size={size} color={color} />
+                  </View>
+                );
+              },
+              tabBarActiveTintColor: 'teal',
+              tabBarInactiveTintColor: 'gray',
+              tabBarStyle: {
+                height: 70,
+                paddingVertical: 10,
+                borderTopWidth: 1,
+                borderTopColor: 'lightgray',
+              },
+              tabBarIconStyle: {
+                marginTop: 5,
+              },
+            })}
+          >
+            <Tab.Screen name="Home" component={HomePage} />
+            <Tab.Screen name="Search" component={SettingPage} />
+            <Tab.Screen name="location" component={HomePage} />
+            <Tab.Screen name="Notifications" component={Support} />
+            <Tab.Screen name="Profile" component={Tasks} />
+          </Tab.Navigator>
         </NavigationContainer>
-        // <NavigationContainer>
-        //   <Tab.Navigator
-        //     screenOptions={({ route }) => ({
-        //       tabBarIcon: ({ focused, color, size }) => {
-        //         let iconName;
-
-        //         if (route.name === 'Home') {
-        //           iconName = focused ? 'home' : 'home-outline';
-        //         } else if (route.name === 'Search') {
-        //           iconName = focused ? 'search' : 'search-outline';
-        //         } else if (route.name === 'Notifications') {
-        //           iconName = focused ? 'notifications' : 'notifications-outline';
-        //         } else if (route.name === 'Profile') {
-        //           iconName = focused ? 'person' : 'person-outline';
-        //         }
-
-        //         // You can return any component that you like here!
-        //         return <Icon name={iconName} size={size} color={color} />;
-        //       },
-        //       tabBarActiveTintColor: 'teal',
-        //       tabBarInactiveTintColor: 'gray',
-        //       tabBarStyle: {
-        //         height: 70,
-        //         paddingVertical: 10,
-        //         borderTopWidth: 1,
-        //         borderTopColor: 'lightgray'
-        //       }
-        //     })}
-        //   >
-        //     <Tab.Screen name="Home" component={HomePage} />
-        //     <Tab.Screen name="Search" component={SettingPage} />
-        //     <Tab.Screen name="Notifications" component={Support} />
-        //     <Tab.Screen name="Profile" component={Tasks} />
-        //   </Tab.Navigator>
-        // </NavigationContainer>
       )}
     </>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  focusedIconContainer: {
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    borderRadius: 30,
+    padding: 10,
+  },
+  icon: {
+    height: 24,
+    width: 24,
+  },
+});
 
 export default App;

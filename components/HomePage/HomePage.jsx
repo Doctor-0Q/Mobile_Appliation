@@ -1,245 +1,228 @@
-import {
-  View,
-  Text,
-  Image,
-  TextInput,
-  ScrollView,
-  FlatList,
-} from "react-native";
 import React from "react";
-import { useState, useEffect } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { doctorProfile } from "../../utils/ProfileData";
-import { useNavigation } from "@react-navigation/native";
-import { TouchableOpacity } from "react-native";
-
-// import { doctorProfile, patientProfile } from "./utils/ProfileData";
-// import { TouchableOpacity } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-
-const StarRating = ({ rating }) => {
-  const maxStars = 5;
-  const fullStars = Math.floor(rating);
-
-  const emptyStars = maxStars - fullStars;
-
-  const stars = [];
-
-  for (let i = 0; i < fullStars; i++) {
-    stars.push(<Icon key={`full-${i}`} name="star" color="gold" size={20} />);
-  }
-
-  for (let i = 0; i < emptyStars; i++) {
-    stars.push(
-      <Icon key={`empty-${i}`} name="star-o" size={20} color="grey" />
-    );
-  }
-
+import {
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+// import { className= } from "nativewind";
+import docimg from "../../assets/Homepage/Pic.png";
+import clinic from "../../assets/Homepage/clinic.png";
+import doc from "../../assets/Homepage/doc.png";
+import banner from "../../assets/Homepage/banner.png";
+import Notification from "../../assets/Homepage/Notification.png";
+import Stethoscope from "../../assets/Homepage/Stethoscope.png";
+import heart from "../../assets/Homepage/heart.png";
+import HandHeart from "../../assets/Homepage/HandHeart.png";
+import Pill from "../../assets/Homepage/Pill.png";
+// import docimg from "../../assets/Homepage/Pic.png";
+const HomePage = () => {
   return (
-    <View style={{ flexDirection: "row", alignItems: "center" }}>
-      {stars}
-      <Text style={{ marginLeft: 8, color: "black", fontWeight: "normal" }}>
-        {rating}
-      </Text>
-    </View>
-  );
-};
-
-export default App = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filteredDoctors, setFilteredDoctors] = useState(doctorProfile);
-
-  useEffect(() => {
-    filterDoctors(searchQuery);
-  }, [searchQuery]);
-
-  const filterDoctors = (query) => {
-    const trimmedQuery = query.trim().toLowerCase();
-    if (trimmedQuery === "") {
-      setFilteredDoctors(doctorProfile);
-    } else {
-      const filtered = doctorProfile.filter(
-        (doctor) =>
-          doctor.name.toLowerCase().includes(trimmedQuery) ||
-          doctor.speciality.toLowerCase().includes(trimmedQuery) ||
-          doctor.starRating.toString().includes(trimmedQuery) ||
-          doctor.consultationTime.toLowerCase().includes(trimmedQuery)
-      );
-      setFilteredDoctors(filtered);
-    }
-  };
-  const navigation = useNavigation();
-
-  const navigateToDoctorProfile = (doctor) => {
-    navigation.navigate("DoctorProfilePage", { doctor });
-  };
-
-  return (
-    <SafeAreaView className="flex-1 mih-h-[100vh] bg-white ">
-      {/* <ScrollView> */}
-      <View className="top  flex w-full h-[28%vh] bg-[#003B2E] rounded-bl-xl rounded-br-xl   ">
-        <Image
-          source={require("./assets/images/userimage1.png")}
-          // source={require("../assets/images/userimage1.png")}
-          className="w-[83] h-[84] rounded-full mt-3 ml-10"
-        />
-        <View className="User message ml-[40] mt-4">
-          <Text>
-            <Text className="text-white ">Hi ,</Text>
-            <Text className="  text-white text-[18] font-bold"> Michel</Text>
-          </Text>
+    <ScrollView className="bg-white p-4">
+      {/* Header */}
+      <View className="flex-row items-center justify-between">
+        <View className="flex-row items-center">
+          <Image source={docimg} className="w-12 h-12 rounded-full" />
+          <View className="ml-3">
+            <Text className="text-lg font-semibold">Welcome Back</Text>
+            <Text className="text-lg">Andrew Smith</Text>
+          </View>
         </View>
-        <View className="welcome message ml-[40] mt-1">
-          <Text>
-            <Text className="text-white">Your health is in </Text>
-            <Text className="text-[#18EE3A]">perfect </Text>
-            <Text className="text-white">condition</Text>
-          </Text>
-        </View>
-        <View className="search mt-4   flex flex-row ">
-          <TextInput
-            className="w-5/6 h-11 rounded-full bg-white  mx-auto relative p-3"
-            placeholder=" Search..."
-            value={searchQuery}
-            onChangeText={setSearchQuery}
+        <TouchableOpacity>
+          <Image
+            source={Notification} // Replace with your icon URL
+            className="w-8 h-8  mr-3"
           />
-          {/* <TouchableOpacity onPress={() => filteredDoctors}> */}
+        </TouchableOpacity>
+      </View>
+
+      {/* Search Bar */}
+      <View className="mt-4">
+        <TextInput
+          placeholder="Search doctor..."
+          className="border p-2 rounded-lg text-gray-700 bg-[#F3F4F6] border-none outline-none"
+        />
+      </View>
+
+      {/* Banner */}
+      <View className="mt-4   rounded-lg">
+        <Image
+          source={banner} // Replace with your image URL
+          className="w-full h-40 mt-2 rounded-lg"
+        />
+      </View>
+
+      {/* Services */}
+      <View className="mt-4">
+        <View className="flex-row justify-between items-center">
+          <Text className="text-lg font-semibold text-[#004D6C]">Services</Text>
           <TouchableOpacity>
+            <Text className="text-[#1B7CA3]">See All</Text>
+          </TouchableOpacity>
+        </View>
+        <View className="flex-row justify-around mt-4  ">
+          {/* Repeat for other service icons */}
+          <View className="items-center w-[70px] h-20 bg-[#F3F4F6]">
             <Image
-              source={require("./assets/images/search.png")}
-              className="w-5 h-5 absolute top-3 right-12"
+              source={Stethoscope} // Replace with your icon URL
+              className="w-9 h-9 mt-2"
             />
+            <Text className="text-[#7D8A95] mt-1">Doctor</Text>
+          </View>
+          <View className="items-center w-[70px] h-20 bg-[#F3F4F6]">
+            <Image
+              source={Pill} // Replace with your icon URL
+              className="w-9 h-9 mt-2"
+            />
+            <Text className="text-[#7D8A95] mt-1">Doctor</Text>
+          </View>
+          <View className="items-center w-[70px] h-20 bg-[#F3F4F6]">
+            <Image
+              source={heart} // Replace with your icon URL
+              className="w-9 h-9 mt-2"
+            />
+            <Text className="text-[#7D8A95] mt-1">Doctor</Text>
+          </View>
+          <View className="items-center w-[70px] h-20 bg-[#F3F4F6]">
+            <Image
+              source={HandHeart} // Replace with your icon URL
+              className="w-9 h-9 mt-2"
+            />
+            <Text className="text-[#7D8A95] mt-1">Doctor</Text>
+          </View>
+        </View>
+      </View>
+
+      {/* Nearby Hospitals */}
+      <View className="mt-4">
+        <View className="flex-row justify-between items-center">
+          <Text className="text-lg font-semibold text-[#004D6C]">
+            Nearby Hospitals
+          </Text>
+          <TouchableOpacity>
+            <Text className="text-[#1B7CA3]">See All</Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView
+          horizontal
+          className="mt-4"
+          showsHorizontalScrollIndicator={false}
+        >
+          {/* Repeat for other hospitals */}
+          <View className="mr-4 bg-gray-100 p-4 rounded-lg">
+            <Image
+              source={clinic} // Replace with your image URL
+              className="w-40 h-24 rounded-lg"
+            />
+            <Text className="mt-2 font-semibold">Sunrise Hospital</Text>
+            <Text>123 Oak Street, CA 98765</Text>
+            <Text className="mt-2 text-yellow-500">5.0 ⭐️ (58 Reviews)</Text>
+            <View className="flex-row mt-2 items-center">
+              <Text className="text-gray-500">2.5 km</Text>
+              <Text className="ml-2 text-gray-500">Hospital</Text>
+            </View>
+          </View>
+          <View className="mr-4 bg-gray-100 p-4 rounded-lg">
+            <Image
+              source={clinic} // Replace with your image URL
+              className="w-40 h-24 rounded-lg"
+            />
+            <Text className="mt-2 font-semibold">Golden Hospital</Text>
+            <Text>95 Bridge Street, NY 10013</Text>
+            <Text className="mt-2 text-yellow-500">4.8 ⭐️ (45 Reviews)</Text>
+            <View className="flex-row mt-2 items-center">
+              <Text className="text-gray-500">2.5 km</Text>
+              <Text className="ml-2 text-gray-500">Hospital</Text>
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+
+      {/* Top Specialist */}
+      <View className="mt-4 gap-y-5">
+        <View className="flex-row justify-between items-center">
+          <Text className="text-lg font-semibold text-[#004D6C]">
+            Top Specialist
+          </Text>
+          <TouchableOpacity>
+            <Text className="text-[#1B7CA3]">See All</Text>
+          </TouchableOpacity>
+        </View>
+        {/* Repeat for other specialists */}
+        <View className=" p-4 mt-4 rounded-lg text-[#004D6C]  shadow-sm">
+          <View className="flex-row items-center">
+            <Image
+              source={doc} //
+              className=" w-24 h-24 "
+            />
+            <View className="ml-3 ">
+              <Text className="font-semibold text-[#004D6C]">
+                Robert Johnson
+              </Text>
+              <Text className="text-[#004D6C]">Neurologist | ABC hospital</Text>
+              <View className="flex-row items-center mt-2">
+                <Text className="text-yellow-500 ">4.8 ⭐️</Text>
+                <Text className="ml-2 text-[#004D6C]">10:30am - 5:30pm</Text>
+              </View>
+            </View>
+          </View>
+          <TouchableOpacity className="mt-4 bg-[#F0F4FC] py-2 rounded-lg">
+            <Text className="text-center text-[#004D6C] text-xl font-bold">
+              Book Appointment
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View className=" p-4 mt-4 rounded-lg text-[#004D6C] shadow-sm">
+          <View className="flex-row items-center">
+            <Image
+              source={doc} //
+              className=" w-24 h-24 "
+            />
+            <View className="ml-3 ">
+              <Text className="font-semibold text-[#004D6C]">
+                Robert Johnson
+              </Text>
+              <Text className="text-[#004D6C]">Neurologist | ABC hospital</Text>
+              <View className="flex-row items-center mt-2">
+                <Text className="text-yellow-500 ">4.8 ⭐️</Text>
+                <Text className="ml-2 text-[#004D6C]">10:30am - 5:30pm</Text>
+              </View>
+            </View>
+          </View>
+          <TouchableOpacity className="mt-4 bg-[#F0F4FC] py-2 rounded-lg">
+            <Text className="text-center text-[#004D6C] text-xl font-bold">
+              Book Appointment
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View className=" p-4 mt-4 rounded-lg text-[#004D6C] shadow-sm">
+          <View className="flex-row items-center">
+            <Image
+              source={doc} //
+              className=" w-24 h-24 "
+            />
+            <View className="ml-3 ">
+              <Text className="font-semibold text-[#004D6C]">
+                Robert Johnson
+              </Text>
+              <Text className="text-[#004D6C]">Neurologist | ABC hospital</Text>
+              <View className="flex-row items-center mt-2">
+                <Text className="text-yellow-500 ">4.8 ⭐️</Text>
+                <Text className="ml-2 text-[#004D6C]">10:30am - 5:30pm</Text>
+              </View>
+            </View>
+          </View>
+          <TouchableOpacity className="mt-4 bg-[#F0F4FC] py-2 rounded-lg">
+            <Text className="text-center text-[#004D6C] text-xl font-bold">
+              Book Appointment
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
-      <View className="flex-1">
-        <View className="Services selection mb-2">
-          <Text className="font-semibold text-xl ml-6 mt-2">Services</Text>
-        </View>
-        <View className="Middle Services min-h-[12%vh] flex  justify-centermx-4">
-          <View className="flex flex-row justify-around w-full">
-            <View className="consult flex flex-col items-center bg-[#A6EFFF] rounded-lg p-5  w-1/4">
-              <Image
-                source={require("./assets/images/consult.png")}
-                className="w-12 h-12"
-                resizeMode="contain"
-              />
-              <Text className="mt-2">Consult</Text>
-            </View>
-            <View className="diagnosis flex flex-col items-center bg-[#BBBAFF] rounded-lg p-5 ">
-              <Image
-                source={require("./assets/images/diagnosis.png")}
-                className="w-12 h-12"
-                resizeMode="contain"
-              />
-              <Text className="mt-2">Diagnosis</Text>
-            </View>
-            <View className="health flex flex-col items-center bg-[#FCE87E] rounded-lg p-5 w-1/4">
-              <Image
-                source={require("./assets/images/heart.png")}
-                className="w-12 h-12"
-                resizeMode="contain"
-              />
-              <Text className="mt-2">Health</Text>
-            </View>
-          </View>
-        </View>
-        <View className="appointment text  mx-4  flex flex-row">
-          <View>
-            <Text className="text-[18] font-bold text-black mt-2">
-              Book a appointment
-            </Text>
-            <Text className="text-[11] text-[#7B7B7B] mb-2">
-              Schedule a appointment with the physician
-            </Text>
-          </View>
-          <View>
-            <TouchableOpacity>
-              <Image
-                source={require("./assets/images/rightArrow.png")}
-                className="w-3 h-3 mt-7 ml-[40]"
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View className="doctorProfile mx-5 flex-1  min-h-[12%vh] ">
-          {filteredDoctors.length > 0 ? (
-            <FlatList
-              data={filteredDoctors}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <View>
-                  <View className="border-2 rounded-lg mt-1 px-3  mb-1 pb-1 pt-1">
-                    <TouchableOpacity
-                      onPress={() => navigateToDoctorProfile(item)}
-                    >
-                      <View className="wrapper flex flex-row  border-gray-300  rounded-lg space-x-7 ">
-                        <View className="image">
-                          <Image
-                            className="w-24 h-24 mt-1 mb-1" // "w-[85] h-[90] mt-1"
-                            source={item.image}
-                            resizeMode="contain"
-                          />
-                        </View>
-                        <View className="description">
-                          <Text className="text-xl font-bold">{item.name}</Text>
-                          <Text className="text-[11px] text-gray-500 ">
-                            {item.speciality}
-                          </Text>
-                          <StarRating rating={parseFloat(item.starRating)} />
-                          {/* <StarRating /> */}
-                          <View className="Consultation flex flex-row gap-3">
-                            <Image
-                              source={item.consultationImage}
-                              className="h-4 w-4"
-                              resizeMode="contain"
-                            />
-                            <Text className="text-[10px] text-gray-500">
-                              {item.consultationTime}
-                            </Text>
-                          </View>
-                        </View>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              )}
-            />
-          ) : (
-            <View className="SorryMessageContainer flex bg-green-800  rounded-xl items-center justify-center min-h-[8%vh]">
-              <Text className=" text-green-100 text-[20]">
-                Sorry, no records found.
-              </Text>
-            </View>
-          )}
-        </View>
-      </View>
-      {/* </ScrollView> */}
-      {/* <View className="Navbar bg-white h-[70]  border-2 rounded-tl-lg rounded-tr-lg shadow-md shadow-top blur-xl shadow-slate-600  absolute bottom-0 left-0 right-0 justify-center items-center  ">
-        <View className="flex flex-row   space-x-16">
-          <View className="bg-green-900   px-6 py-1 rounded-xl">
-            <Image
-              source={require("./assets/images/Home.png")}
-              className="w-6 h-6 "
-            />
-          </View>
-          <Image
-            source={require("./assets/images/search.png")}
-            className="w-6 h-6"
-          />
-          <Image
-            source={require("./assets/images/notification.png")}
-            className="w-6 h-6"
-          />
-          <Image
-            source={require("./assets/images/login.png")}
-            className="w-6 h-6"
-          />
-        </View>
-      </View> */}
-    </SafeAreaView>
+    </ScrollView>
   );
 };
+
+export default HomePage;
