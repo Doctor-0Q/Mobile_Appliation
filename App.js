@@ -29,6 +29,9 @@ import logut from "./assets/dashboard/logut.png";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons'; // Example icon library
 import ProfileSettings from "./components/ProfileSettings/ProfileSettings.jsx"
+import Search from "./components/searchpage/Search.jsx"
+import logo from "./components/Logopage.jsx"
+import onboarding from "./components/Onboardingpage.jsx"
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -176,9 +179,9 @@ const App = () => {
             })}
           >
             <Tab.Screen name="Home" component={HomePage} />
-            <Tab.Screen name="Search" component={SettingPage} />
-            <Tab.Screen name="location" component={HomePage} />
-            <Tab.Screen name="Notifications" component={Support} />
+            <Tab.Screen name="Search" component={Search} />
+            <Tab.Screen name="location" component={logo} />
+            <Tab.Screen name="Notifications" component={onboarding} />
             <Tab.Screen name="Profile" component={ProfileSettings} />
           </Tab.Navigator>
         </NavigationContainer>
