@@ -5,11 +5,13 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 import { StatusBar } from "expo-status-bar";
 import Dashboard from "./components/Dashboard/Dashboard";
+import ShareProfile from "./components/ShareProfile";
 import Messages from "./components/messages/Messages";
 import SettingPage from "./components/settings/SettingPage";
 import CustomDrawerContent from "./components/CustomDrawerContent";
 import Tasks from "./components/Tasks";
-import Patients from "./components/Patients";
+// import Patients from "./components/Patients";
+import Patients from "./components/Patients/patients";
 import Schedule from "./components/Schedule";
 import Analytics from "./components/Analytics";
 import Support from "./components/Support";
@@ -18,6 +20,7 @@ import Doctorprofile from "./components/LandingPages/doctorprofile/Doctorprofile
 import HomePage from "./components/HomePage/HomePage";
 import SignIn from './components/LandingPages/SignIn';
 import dashboard from "./assets/dashboard/dashboard.png";
+import share from "./assets/dashboard/share.png";
 import setting from "./assets/dashboard/setting.png";
 import message from "./assets/dashboard/mail.png";
 import schedule from "./assets/dashboard/schedule.png";
@@ -38,7 +41,7 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const App = () => {
-  const [user, setUser] = useState(!true);
+  const [user, setUser] = useState(true);
 
   return (
     <>
@@ -55,6 +58,16 @@ const App = () => {
                 title: "Dashboard",
                 headerRight: () => <SearchBar />,
                 drawerIcon: () => <Image source={dashboard} style={styles.icon} />,
+              }}
+            />
+            <Drawer.Screen
+              name="Share Profile"
+              component={ShareProfile}
+              options={{
+                drawerLabel: "Share Profile",
+                title: "Share Profile",
+                headerRight: () => <SearchBar />,
+                drawerIcon: () => <Image source={share} style={styles.icon} />,
               }}
             />
             <Drawer.Screen

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-// import { useNavigation } from "@react-navigation/native";
 
 import {
   View,
@@ -14,21 +13,36 @@ import {
   Feather,
   AntDesign,
 } from "@expo/vector-icons";
-import data from "../../utils/data.json";
+import API_URL from "../../config";
+import axios from "axios";
+// import data from "../../utils/data.json";
 
 const Patients = () => {
   // const navigation = useNavigation();
   const [page, setPage] = useState(0);
   const itemsPerPage = 3;
+  const [data, setData] = useState([]);
 
   const totalPages = Math.ceil(data.length / itemsPerPage);
 
   useEffect(() => {
     getPatients();
-  }, [page]);
+  }, []);
 
-  const getPatients = () => {
-    setPatients(paginate(data));
+  const getPatients = async () => {
+    // setPatients(paginate(data));
+    try {
+      const res = await axios.post(`${API_URL}/api/patientslist`, {
+        docId: "2FZilBl6rlRI5IsPYMmyMtbFJrG2",
+      });
+      // const res = await axios.get(`http://localhost:8080/api/endpoint`);
+      const datas = await res.data;
+      // console.log(datas);
+      setData(datas);
+    } catch (error) {
+      console.error(error);
+      return;
+    }
   };
 
   const paginate = (data) => {
