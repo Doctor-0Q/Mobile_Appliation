@@ -15,35 +15,13 @@ import {
 } from "@expo/vector-icons";
 import API_URL from "../../config";
 import axios from "axios";
-// import data from "../../utils/data.json";
 
 const Patients = () => {
-  // const navigation = useNavigation();
   const [page, setPage] = useState(0);
-  const itemsPerPage = 3;
+  const itemsPerPage = 5;
   const [data, setData] = useState([]);
 
   const totalPages = Math.ceil(data.length / itemsPerPage);
-
-  useEffect(() => {
-    getPatients();
-  }, []);
-
-  const getPatients = async () => {
-    // setPatients(paginate(data));
-    try {
-      const res = await axios.post(`${API_URL}/api/patientslist`, {
-        docId: "2FZilBl6rlRI5IsPYMmyMtbFJrG2",
-      });
-      // const res = await axios.get(`http://localhost:8080/api/endpoint`);
-      const datas = await res.data;
-      // console.log(datas);
-      setData(datas);
-    } catch (error) {
-      console.error(error);
-      return;
-    }
-  };
 
   const paginate = (data) => {
     const start = page * itemsPerPage;
@@ -51,7 +29,25 @@ const Patients = () => {
     return data.slice(start, end);
   };
 
-  const [patients, setPatients] = useState(paginate(data));
+  const [patients, setPatients] = useState(null);
+
+  useEffect(() => {
+    getPatients();
+  }, []);
+
+  const getPatients = async () => {
+    try {
+      const res = await axios.post(`${API_URL}/api/patientslist`, {
+        docId: "2FZilBl6rlRI5IsPYMmyMtbFJrG2",
+      });
+      const datas = await res.data;
+      setData(datas);
+      setPatients(paginate(datas));
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+  };
 
   const prev = () => {
     if (page > 0) {
@@ -92,30 +88,30 @@ const Patients = () => {
     <View className="bg-white px-4 py-2 my-2 rounded">
       <View className="Name  flex-row  items-center w-full py-1">
         <Text className="w-2/6">Name </Text>
-        <Text className="w-4/6 ml-20 font-bold">{item.Name}</Text>
+        <Text className="w-4/6 ml-20 font-bold">{item.name}</Text>
       </View>
       <View className="Diagnosis  flex-row  items-center w-full py-1">
         <Text className="w-2/6 ">Diagnosis</Text>
-        <Text className="w-4/6 ml-20 font-bold"> {item.Diagnosis}</Text>
+        <Text className="w-4/6 ml-20 font-bold"> {item.diagnosis}</Text>
       </View>
       <View className="Status  flex-row  items-center w-full py-1">
         <Text className="w-2/6">Status</Text>
 
         <Text
           className={`${getStatusBg(
-            item.Status
+            item.status
           )} w-auto  px-3  rounded-lg py-1  ml-20 font-bold`}
         >
-          {item.Status}
+          {item.status}
         </Text>
       </View>
       <View className="Status  flex-row  items-center w-full py-1">
         <Text>Last Appointment</Text>
-        <Text className=" ml-20 font-bold">{item["Last Appointment"]}</Text>
+        <Text className=" ml-20 font-bold">{item.lastAppointment}</Text>
       </View>
       <View className="Status  flex-row  items-center w-full py-1">
         <Text>Next Appointment</Text>
-        <Text className=" ml-20 font-bold">{item["Next Appointment"]}</Text>
+        <Text className=" ml-20 font-bold">{item.nextAppointment}</Text>
       </View>
       <View className="Options flex-row  items-center w-full py-1">
         <Text className="w-2/6 ">Options </Text>
@@ -134,7 +130,7 @@ const Patients = () => {
     switch (status) {
       case "Recovered":
         return "bg-emerald-200";
-      case "Awaiting surgery":
+      case "Awaiting":
         return "bg-blue-200";
       default:
         return "bg-red-200";
