@@ -15,6 +15,7 @@ import {
 } from "@expo/vector-icons";
 import API_URL from "../../config";
 import axios from "axios";
+import { Toast } from "toastify-react-native";
 
 const Patients = () => {
   const [page, setPage] = useState(0);
@@ -42,6 +43,7 @@ const Patients = () => {
       });
       const datas = await res.data;
       setData(datas);
+      Toast.success(`Total patients: ${datas.length}`);
       setPatients(paginate(datas));
     } catch (error) {
       console.error(error);
