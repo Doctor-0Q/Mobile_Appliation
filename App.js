@@ -10,6 +10,7 @@ import ProfileSettings from "./components/ProfileSettings/ProfileSettings.jsx"
 import Search from "./components/searchpage/Search.jsx"
 import logo from "./components/Logopage.jsx"
 import onboarding from "./components/Onboardingpage.jsx"
+import Notifications from "./components/Notificationspage/NotificationScreen.jsx"
 import DoctorDrawerScreen from "./components/DoctorDrawerScreen.jsx";
 import { auth } from "./utils/firebase.js";
 import ToastManager from "toastify-react-native";
@@ -17,7 +18,6 @@ import EmailVerification from "./components/EmailVerification.jsx";
 import Logout from "./components/Logout.jsx";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-// import { useNavigation } from '@react-navigation/native';
 
 const App = () => {
   const [isDoctor, setIsDoctor] = useState(!true);
