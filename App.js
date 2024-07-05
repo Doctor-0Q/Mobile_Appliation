@@ -14,11 +14,13 @@ import Notifications from "./components/Notificationspage/NotificationScreen.jsx
 import DoctorDrawerScreen from "./components/DoctorDrawerScreen.jsx";
 import { clientAuth } from "./utils/firebase.js";
 import ToastManager from "toastify-react-native";
+import AddPatients from "./components/AddPatients/addPatients.jsx";
 import EmailVerification from "./components/EmailVerification.jsx";
 import Logout from "./components/Logout.jsx";
 import SettingPage from "./components/settings/SettingPage.jsx";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
 
 const App = () => {
   const [isDoctor, setIsDoctor] = useState(!true);

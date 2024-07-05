@@ -2,6 +2,9 @@ import React from 'react';
 import { Image, StyleSheet } from 'react-native';
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
 import { StatusBar } from "expo-status-bar";
 import Dashboard from './Dashboard/Dashboard';
 import ShareProfile from './ShareProfile';
@@ -25,10 +28,11 @@ import logut from "../assets/dashboard/logut.png";
 import CustomDrawerContent from './CustomDrawerContent';
 import SearchBar from './pages/SearchBar';
 import Logout from './Logout';
-
+import AddPatients from './AddPatients/addPatients';
 
 const Drawer = createDrawerNavigator();
-
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 const styles = StyleSheet.create({
     focusedIconContainer: {
       backgroundColor: 'rgba(0, 0, 0, 0.1)',
@@ -148,7 +152,19 @@ function DoctorDrawerScreen() {
                             drawerIcon: () => <Image source={logut} style={styles.icon} />,
                         }}
                     />
+                    <Drawer.Screen
+          name="AddPatients"
+          component={AddPatients}
+          options={{
+            drawerLabel: "Add Patients",
+            title: "Add Patients",
+            headerRight: () => <SearchBar />,
+            // drawerIcon: () => <Image source={addPatientsIcon} style={styles.icon} />, // Replace with appropriate icon
+          }}
+        />
                 </Drawer.Navigator>
+                
+                
                 <StatusBar style="auto" />
             </NavigationContainer>
         </>

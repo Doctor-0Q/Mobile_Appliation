@@ -19,8 +19,11 @@ import {
   Platform,
 } from "react-native";
 import { TextInput, ScrollView, Image } from "react-native";
+import API_URL from "../../config";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { Toast } from "toastify-react-native";
+import { useNavigation } from '@react-navigation/native';
 
 export default function AddPatients() {
   const initialPatientInfo = {
@@ -45,7 +48,7 @@ export default function AddPatients() {
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
-
+  const navigation = useNavigation();
   const handleChange = (field, value) => {
     setPatientInfo({
       ...patientInfo,
@@ -114,7 +117,34 @@ export default function AddPatients() {
       month < 10 ? "0" + month : month
     }-${year}`;
   };
-
+  const userId = '2FZilBl6rlRI5IsPYMmyMtbFJrG2';
+  const handleAddPatient = async () => {
+    try {
+      console.log("hello")
+      // const data = { ...patientInfo, uid: user.userId }
+      const data = { ...patientInfo, uid:userId }
+      console.log(data)
+      const res = await fetch(`${API_URL}/api/addPatients`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    
+    const datas = await res.json();
+    if(!res.ok){
+      Toast.error("Error adding patient")
+      return;
+    }
+    Toast.success("New patient added");
+    // navigate("/patients");
+    navigation.navigate('Patients');
+    
+  } catch (error) {
+    return;
+  }
+};
   return (
     <SafeAreaView className="h-full">
       <ScrollView>
@@ -130,7 +160,7 @@ export default function AddPatients() {
               </TouchableOpacity>
               <TouchableOpacity
                 className="saveBtn px-3 py-2 rounded bg-[#0000AC]"
-                onPress={handleValidateAndSubmit}
+                onPress={handleAddPatient}
               >
                 <Text className="text-white font-semibold ">Save</Text>
               </TouchableOpacity>
