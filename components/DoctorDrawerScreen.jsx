@@ -143,7 +143,7 @@ function DoctorDrawerScreen() {
                         component={Logout}
                         options={{
                             drawerLabel: "Logout",
-                            title: "Logut",
+                            title: "Logout",
                             headerRight: () => <SearchBar />,
                             drawerIcon: () => <Image source={logut} style={styles.icon} />,
                         }}

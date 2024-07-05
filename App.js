@@ -12,10 +12,11 @@ import logo from "./components/Logopage.jsx"
 import onboarding from "./components/Onboardingpage.jsx"
 import Notifications from "./components/Notificationspage/NotificationScreen.jsx"
 import DoctorDrawerScreen from "./components/DoctorDrawerScreen.jsx";
-import { auth } from "./utils/firebase.js";
+import { clientAuth } from "./utils/firebase.js";
 import ToastManager from "toastify-react-native";
 import EmailVerification from "./components/EmailVerification.jsx";
 import Logout from "./components/Logout.jsx";
+import SettingPage from "./components/settings/SettingPage.jsx";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -26,15 +27,14 @@ const App = () => {
   const [emailVerified, setEmailVerified] = useState(true);
 
   useEffect(() => {
-    auth.onAuthStateChanged(async (user) => {
+    clientAuth.onAuthStateChanged(async (user) => {
       if (user) {
         const claims = (await user.getIdTokenResult()).claims;
         console.log(claims);
         setEmailVerified(claims.email_verified);
         setUserInfo(claims.info);
-        if (claims.role === 'doctor') {
+        if (claims.role === 'doctor')
           setIsDoctor(true);
-        }
         else
           setIsDoctor(false);
         setUser(user);
@@ -44,15 +44,14 @@ const App = () => {
       }
     });
 
-    auth.onIdTokenChanged(async (user) => {
+    clientAuth.onIdTokenChanged(async (user) => {
       if (user) {
         const claims = (await user.getIdTokenResult()).claims;
         console.log(claims);
         setEmailVerified(claims.email_verified);
         setUserInfo(claims.info);
-        if (claims.role === 'doctor') {
+        if (claims.role === 'doctor')
           setIsDoctor(true);
-        }
         else
           setIsDoctor(false);
         setUser(user);
@@ -66,84 +65,91 @@ const App = () => {
 
   return (
     <>
-      {(!user || (user && !isDoctor)) ? (
-        <NavigationContainer>
-          <Tab.Navigator
-            screenOptions={({ route }) => ({
-              tabBarIcon: ({ focused, color, size }) => {
-                let iconName;
-
-                if (route.name === 'Home') {
-                  iconName = focused ? 'home' : 'home-outline';
-                } else if (route.name === 'Search') {
-                  iconName = focused ? 'search' : 'search-outline';
-                } else if (route.name === 'Notifications') {
-                  iconName = focused ? 'notifications' : 'notifications-outline';
-                } else if (route.name === 'Profile' || route.name === 'Sign In') {
-                  iconName = focused ? 'person' : 'person-outline';
-                } else if (route.name === 'location') {
-                  iconName = focused ? 'location' : 'location-outline';
-                } else if (route.name === 'EmailVerification') {
-                  iconName = focused ? 'email' : 'email-outline';
-                }
-
-                return (
-                  <View style={focused ? styles.focusedIconContainer : null}>
-                    <Icon name={iconName} size={size} color={color} />
-                  </View>
-                );
-              },
-              tabBarActiveTintColor: 'teal',
-              tabBarInactiveTintColor: 'gray',
-              tabBarStyle: {
-                height: 70,
-                paddingVertical: 10,
-                borderTopWidth: 1,
-                borderTopColor: 'lightgray',
-              },
-              tabBarIconStyle: {
-                marginTop: 5,
-              },
-            })}
-          >
-            {
-              user && !emailVerified ?
-                <>
-                  <Tab.Screen name="EmailVerification" component={EmailVerification} />
-                  <Tab.Screen name="LogOut" component={Logout} />
-                </>
-                :
-                <>
-                  {user && emailVerified && !userInfo ?
-                    <>
-                      <Tab.Screen name="Details" component={Search} />
-                      <Tab.Screen name="LogOut" component={Logout} />
-                    </>
+      {
+        (user && !emailVerified) ?
+          <>
+            <NavigationContainer>
+              <Tab.Navigator>
+                <Tab.Screen name="EmailVerification" component={EmailVerification} />
+                <Tab.Screen name="LogOut" component={Logout} />
+              </Tab.Navigator>
+            </NavigationContainer>
+          </>
+          :
+          <>
+            {(user && emailVerified && !userInfo) ?
+              <>
+                <NavigationContainer>
+                  <Tab.Navigator>
+                    <Tab.Screen name="Details" component={ProfileSettings} />
+                    <Tab.Screen name="LogOut" component={Logout} />
+                  </Tab.Navigator>
+                </NavigationContainer>
+              </>
+              :
+              <>
+                {
+                  (user && isDoctor) ?
+                    <DoctorDrawerScreen />
                     :
                     <>
-                      <Tab.Screen name="Home" component={HomePage} />
-                      <Tab.Screen name="Search" component={Search} />
-                      <Tab.Screen name="location" component={logo} />
-                      <Tab.Screen name="Notifications" component={onboarding} />
-                      {user ?
-                        <Tab.Screen name="Profile" component={ProfileSettings} />
-                        :
-                        <Tab.Screen name="Sign In" component={SignIn} />
+                      {(!user || (user && !isDoctor)) && (
+                        <NavigationContainer>
+                          <Tab.Navigator
+                            screenOptions={({ route }) => ({
+                              tabBarIcon: ({ focused, color, size }) => {
+                                let iconName;
+
+                                if (route.name === 'Home') {
+                                  iconName = focused ? 'home' : 'home-outline';
+                                } else if (route.name === 'Search') {
+                                  iconName = focused ? 'search' : 'search-outline';
+                                } else if (route.name === 'Notifications') {
+                                  iconName = focused ? 'notifications' : 'notifications-outline';
+                                } else if (route.name === 'Profile' || route.name === 'Sign In') {
+                                  iconName = focused ? 'person' : 'person-outline';
+                                } else if (route.name === 'location') {
+                                  iconName = focused ? 'location' : 'location-outline';
+                                }
+
+                                return (
+                                  <View style={focused ? styles.focusedIconContainer : null}>
+                                    <Icon name={iconName} size={size} color={color} />
+                                  </View>
+                                );
+                              },
+                              tabBarActiveTintColor: 'teal',
+                              tabBarInactiveTintColor: 'gray',
+                              tabBarStyle: {
+                                height: 70,
+                                paddingVertical: 10,
+                                borderTopWidth: 1,
+                                borderTopColor: 'lightgray',
+                              },
+                              tabBarIconStyle: {
+                                marginTop: 5,
+                              },
+                            })}
+                          >
+                            <Tab.Screen name="Home" component={HomePage} />
+                            <Tab.Screen name="Search" component={Search} />
+                            <Tab.Screen name="location" component={logo} />
+                            <Tab.Screen name="Notifications" component={onboarding} />
+                            {user ?
+                              <Tab.Screen name="Profile" component={ProfileSettings} />
+                              :
+                              <Tab.Screen name="Sign In" component={SignIn} />
+                            }
+                          </Tab.Navigator>
+                        </NavigationContainer>
+                      )
                       }
                     </>
-                  }
-                </>
+                }
+              </>
             }
-          </Tab.Navigator>
-        </NavigationContainer>
-
-      ) : (
-        <>
-          {(user && isDoctor) &&
-            <DoctorDrawerScreen />
-          }
-        </>
-      )}
+          </>
+      }
       <ToastManager />
     </>
   );

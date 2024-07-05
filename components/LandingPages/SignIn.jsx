@@ -13,7 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import API_URL from "../../config";
 import axios from "axios";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { auth } from "../../utils/firebase";
+import { clientAuth } from "../../utils/firebase";
 import { Toast } from "toastify-react-native";
 import { useNavigation } from '@react-navigation/native';
 
@@ -57,7 +57,7 @@ const SignUpScreen = () => {
         return;
       }
       try {
-        await signInWithEmailAndPassword(auth, email, password);
+        await signInWithEmailAndPassword(clientAuth, email, password);
         navigation.navigate("Home");
       }
       catch (e) {
@@ -79,7 +79,7 @@ const SignUpScreen = () => {
       return;
     }
     try {
-      const user = (await signInWithEmailAndPassword(auth, email, password)).user;
+      const user = (await signInWithEmailAndPassword(clientAuth, email, password)).user;
       Toast.success(`Welcome ${user.displayName}`);
       navigation.navigate("Home");
     }
@@ -88,7 +88,7 @@ const SignUpScreen = () => {
       const errorCode = e.code;
       console.log(errorCode);
       try {
-        await signOut(auth);
+        await signOut(clientAuth);
         navigation.navigate("SignIn");
       }
       catch (e) {

@@ -12,7 +12,7 @@ import img from "../assets/images/signinbg.png";
 import { SafeAreaView } from "react-native-safe-area-context";
 import API_URL from "../config";
 import axios from "axios";
-import { auth } from "../utils/firebase";
+import { clientAuth } from "../utils/firebase";
 import { Toast } from "toastify-react-native";
 import { obscureEmail } from "../utils/functions";
 import { useNavigation } from '@react-navigation/native';
@@ -27,7 +27,7 @@ const EmailVerification = () => {
     const [verifyButtonLoading, setVerifyButtonLoading] = useState(false);
 
     useEffect(() => {
-        auth.onAuthStateChanged(async (user) => {
+        clientAuth.onAuthStateChanged(async (user) => {
             if (user) {
                 const claims = (await user.getIdTokenResult()).claims;
                 console.log(claims);
@@ -124,7 +124,7 @@ const EmailVerification = () => {
                 Toast.error(data);
                 return;
             }
-            await auth.currentUser.getIdToken(true);
+            await clientAuth.currentUser.getIdToken(true);
             Toast.success(data);
             navigation.navigate("Home");
         }

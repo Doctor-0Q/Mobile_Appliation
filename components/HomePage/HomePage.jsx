@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ScrollView,
   Text,
@@ -17,8 +17,30 @@ import Stethoscope from "../../assets/Homepage/Stethoscope.png";
 import heart from "../../assets/Homepage/heart.png";
 import HandHeart from "../../assets/Homepage/HandHeart.png";
 import Pill from "../../assets/Homepage/Pill.png";
+import { showLocation } from "../../utils/functions";
+import API_URL from "../../config";
+import { Toast } from "toastify-react-native";
 // import docimg from "../../assets/Homepage/Pic.png";
+import { useNavigation } from '@react-navigation/native';
+
+
 const HomePage = () => {
+  const navigation = useNavigation();
+  const [search, setSearch] = useState("");
+  const handleSearch = async (e) => {
+    e.preventDefault();
+
+    if (!search || search === "") {
+      Toast.warn("Please enter a valid query!");
+      return;
+    }
+    console.log(search);
+    const data = await showLocation(null, search, null);
+    if(data) {
+      navigation.navigate("Home")
+    }
+    console.log("Done");
+  }
   return (
     <ScrollView className="bg-white p-4">
       {/* Header */}
@@ -43,6 +65,9 @@ const HomePage = () => {
         <TextInput
           placeholder="Search doctor..."
           className="border p-2 rounded-lg text-gray-700 bg-[#F3F4F6] border-none outline-none"
+          value={search}
+          onChangeText={text => setSearch(text)}
+          onSubmitEditing={handleSearch}
         />
       </View>
 

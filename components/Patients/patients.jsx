@@ -38,7 +38,7 @@ const Patients = () => {
         docId: "2FZilBl6rlRI5IsPYMmyMtbFJrG2",
       });
       let datas = await res.data;
-      datas = datas.filter(data => data.status)
+      // datas = datas.filter(data => data.status)
       setData(datas);
       Toast.success(`Total patients: ${datas.length}`);
       setPatients(paginate(datas));
