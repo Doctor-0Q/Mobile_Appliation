@@ -15,6 +15,7 @@ import axios from "axios";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../../utils/firebase";
 import { Toast } from "toastify-react-native";
+
 const SignUpScreen = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");

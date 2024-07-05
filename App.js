@@ -14,12 +14,14 @@ import Notifications from "./components/Notificationspage/NotificationScreen.jsx
 import DoctorDrawerScreen from "./components/DoctorDrawerScreen.jsx";
 import { auth } from "./utils/firebase.js";
 import ToastManager from "toastify-react-native";
+import AddPatients from "./components/AddPatients/addPatients.jsx";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+
 const App = () => {
-  const [isDoctor, setIsDoctor] = useState(false); 
-  const [user, setUser] = useState(!true);
+  const [isDoctor, setIsDoctor] = useState(true); 
+  const [user, setUser] = useState(true);
 
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
@@ -30,15 +32,17 @@ const App = () => {
           setIsDoctor(true);
         }
         setUser(user);
-      } else {
-        setUser(null);
-      }
+      } 
+      // else {
+      //   setIsDoctor(false);
+      //   setUser(null);
+      // }
     });
   }, []);
 
   return (
     <>
-      {isDoctor ? (
+      {(user && isDoctor) ? (
         <DoctorDrawerScreen />
       ) : (
         <NavigationContainer>
@@ -78,10 +82,12 @@ const App = () => {
               },
             })}
           >
+            {/* <Tab.Screen name="Home" component={HomeStack} /> */}
             <Tab.Screen name="Home" component={HomePage} />
             <Tab.Screen name="Search" component={Search} />
             <Tab.Screen name="location" component={logo} />
             <Tab.Screen name="Notifications" component={Notifications} />
+            
             {user ?
               <Tab.Screen name="Profile" component={ProfileSettings} />
               :

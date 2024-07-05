@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-
+import { auth } from "../../utils/firebase";
+import { useNavigation } from '@react-navigation/native';
 import {
   View,
   Text,
@@ -18,6 +19,7 @@ import axios from "axios";
 import { Toast } from "toastify-react-native";
 
 const Patients = () => {
+  // const navigation = useNavigation();
   const [page, setPage] = useState(0);
   const itemsPerPage = 5;
   const [data, setData] = useState([]);
@@ -37,9 +39,10 @@ const Patients = () => {
   }, []);
 
   const getPatients = async () => {
+    const userId = '2FZilBl6rlRI5IsPYMmyMtbFJrG2';
     try {
       const res = await axios.post(`${API_URL}/api/patientslist`, {
-        docId: "2FZilBl6rlRI5IsPYMmyMtbFJrG2",
+        docId: userId,
       });
       const datas = await res.data;
       setData(datas);
@@ -138,9 +141,10 @@ const Patients = () => {
         return "bg-red-200";
     }
   };
+  const navigation = useNavigation();
+
   const handleAddPatients = () => {
-    console.log("addpatients routing");
-    // navigation.navigate("test");
+    navigation.navigate('AddPatients');
   };
   const HeaderComponent = ({ totalPatients }) => (
     <View className="px- ml-1">
@@ -150,11 +154,9 @@ const Patients = () => {
           <Text className="text-gray-600 font-bold"> ({data.length})</Text>
         </View>
         <View className=" icons flex-row items-center space-x-8 ">
-          <TouchableOpacity
-          // onPress={handleAddPatients}
-          >
-            <MaterialCommunityIcons name="plus" size={26} color="black" />
-          </TouchableOpacity>
+        <TouchableOpacity onPress={handleAddPatients}>
+        <MaterialCommunityIcons name="plus" size={26} color="black" />
+      </TouchableOpacity>
           {/* </Link> */}
 
           <TouchableOpacity>
@@ -170,6 +172,9 @@ const Patients = () => {
       </View>
     </View>
   );
+  // useEffect(() => {
+  //   fetchPatientList();
+  // }, []);
 
   return (
     <SafeAreaView className="flex-1">
