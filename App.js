@@ -5,7 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomePage from "./components/HomePage/HomePage";
 import SignIn from './components/LandingPages/SignIn';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/Ionicons'; // Example icon library
+import Icon from 'react-native-vector-icons/Ionicons'; 
 import ProfileSettings from "./components/ProfileSettings/ProfileSettings.jsx"
 import Search from "./components/searchpage/Search.jsx"
 import logo from "./components/Logopage.jsx"
@@ -14,13 +14,11 @@ import Notifications from "./components/Notificationspage/NotificationScreen.jsx
 import DoctorDrawerScreen from "./components/DoctorDrawerScreen.jsx";
 import { clientAuth } from "./utils/firebase.js";
 import ToastManager from "toastify-react-native";
-import AddPatients from "./components/AddPatients/addPatients.jsx";
 import EmailVerification from "./components/EmailVerification.jsx";
 import Logout from "./components/Logout.jsx";
 import SettingPage from "./components/settings/SettingPage.jsx";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-
 
 const App = () => {
   const [isDoctor, setIsDoctor] = useState(!true);

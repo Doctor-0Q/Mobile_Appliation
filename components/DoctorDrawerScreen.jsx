@@ -35,16 +35,16 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const styles = StyleSheet.create({
     focusedIconContainer: {
-      backgroundColor: 'rgba(0, 0, 0, 0.1)',
-      borderRadius: 30,
-      padding: 10,
+        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+        borderRadius: 30,
+        padding: 10,
     },
     icon: {
-      height: 24,
-      width: 24,
+        height: 24,
+        width: 24,
     },
-  });
-  
+});
+
 function DoctorDrawerScreen() {
     return (
         <>
@@ -153,18 +153,18 @@ function DoctorDrawerScreen() {
                         }}
                     />
                     <Drawer.Screen
-          name="AddPatients"
-          component={AddPatients}
-          options={{
-            drawerLabel: "Add Patients",
-            title: "Add Patients",
-            headerRight: () => <SearchBar />,
-            // drawerIcon: () => <Image source={addPatientsIcon} style={styles.icon} />, // Replace with appropriate icon
-          }}
-        />
+                        name="Add Patients"
+                        component={AddPatients}
+                        options={{
+                            drawerLabel: "Add Patients",
+                            title: "Add Patients",
+                            headerRight: () => <SearchBar />,
+                            // drawerIcon: () => <Image source={addPatientsIcon} style={styles.icon} />, // Replace with appropriate icon
+                        }}
+                    />
                 </Drawer.Navigator>
-                
-                
+
+
                 <StatusBar style="auto" />
             </NavigationContainer>
         </>
