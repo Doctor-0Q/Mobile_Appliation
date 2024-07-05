@@ -15,36 +15,60 @@ import DoctorDrawerScreen from "./components/DoctorDrawerScreen.jsx";
 import { auth } from "./utils/firebase.js";
 import ToastManager from "toastify-react-native";
 import AddPatients from "./components/AddPatients/addPatients.jsx";
+import EmailVerification from "./components/EmailVerification.jsx";
+import Logout from "./components/Logout.jsx";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 
 const App = () => {
-  const [isDoctor, setIsDoctor] = useState(true); 
-  const [user, setUser] = useState(true);
+  const [isDoctor, setIsDoctor] = useState(!true);
+  const [user, setUser] = useState(!true);
+  const [userInfo, setUserInfo] = useState(null);
+  const [emailVerified, setEmailVerified] = useState(true);
 
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
       if (user) {
         const claims = (await user.getIdTokenResult()).claims;
         console.log(claims);
+        setEmailVerified(claims.email_verified);
+        setUserInfo(claims.info);
         if (claims.role === 'doctor') {
           setIsDoctor(true);
         }
+        else
+          setIsDoctor(false);
         setUser(user);
-      } 
-      // else {
-      //   setIsDoctor(false);
-      //   setUser(null);
-      // }
+      } else {
+        setUser(null);
+        setIsDoctor(false)
+      }
     });
+
+    auth.onIdTokenChanged(async (user) => {
+      if (user) {
+        const claims = (await user.getIdTokenResult()).claims;
+        console.log(claims);
+        setEmailVerified(claims.email_verified);
+        setUserInfo(claims.info);
+        if (claims.role === 'doctor') {
+          setIsDoctor(true);
+        }
+        else
+          setIsDoctor(false);
+        setUser(user);
+      } else {
+        setUser(null);
+        setIsDoctor(false)
+      }
+    });
+
   }, []);
 
   return (
     <>
-      {(user && isDoctor) ? (
-        <DoctorDrawerScreen />
-      ) : (
+      {(!user || (user && !isDoctor)) ? (
         <NavigationContainer>
           <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -61,6 +85,8 @@ const App = () => {
                   iconName = focused ? 'person' : 'person-outline';
                 } else if (route.name === 'location') {
                   iconName = focused ? 'location' : 'location-outline';
+                } else if (route.name === 'EmailVerification') {
+                  iconName = focused ? 'email' : 'email-outline';
                 }
 
                 return (
@@ -82,19 +108,43 @@ const App = () => {
               },
             })}
           >
-            {/* <Tab.Screen name="Home" component={HomeStack} /> */}
-            <Tab.Screen name="Home" component={HomePage} />
-            <Tab.Screen name="Search" component={Search} />
-            <Tab.Screen name="location" component={logo} />
-            <Tab.Screen name="Notifications" component={Notifications} />
-            
-            {user ?
-              <Tab.Screen name="Profile" component={ProfileSettings} />
-              :
-              <Tab.Screen name="Sign In" component={SignIn} />
+            {
+              user && !emailVerified ?
+                <>
+                  <Tab.Screen name="EmailVerification" component={EmailVerification} />
+                  <Tab.Screen name="LogOut" component={Logout} />
+                </>
+                :
+                <>
+                  {user && emailVerified && !userInfo ?
+                    <>
+                      <Tab.Screen name="Details" component={Search} />
+                      <Tab.Screen name="LogOut" component={Logout} />
+                    </>
+                    :
+                    <>
+                      <Tab.Screen name="Home" component={HomePage} />
+                      <Tab.Screen name="Search" component={Search} />
+                      <Tab.Screen name="location" component={logo} />
+                      <Tab.Screen name="Notifications" component={onboarding} />
+                      {user ?
+                        <Tab.Screen name="Profile" component={ProfileSettings} />
+                        :
+                        <Tab.Screen name="Sign In" component={SignIn} />
+                      }
+                    </>
+                  }
+                </>
             }
           </Tab.Navigator>
         </NavigationContainer>
+
+      ) : (
+        <>
+          {(user && isDoctor) &&
+            <DoctorDrawerScreen />
+          }
+        </>
       )}
       <ToastManager />
     </>

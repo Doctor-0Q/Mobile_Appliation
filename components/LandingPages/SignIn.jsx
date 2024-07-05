@@ -15,8 +15,10 @@ import axios from "axios";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../../utils/firebase";
 import { Toast } from "toastify-react-native";
+import { useNavigation } from '@react-navigation/native';
 
 const SignUpScreen = () => {
+  const navigation = useNavigation();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,13 +51,14 @@ const SignUpScreen = () => {
       const response = await axios.post(`${API_URL}/api/user/signup`, data);
       const responseData = await response.data;
       setRegisterButtonDisable(false);
-      console.log(response.statusText);
-      if (response.statusText !== "OK") {
+      console.log(response.status);
+      if (response.status !== 201) {
         Toast.error(responseData);
         return;
       }
       try {
         await signInWithEmailAndPassword(auth, email, password);
+        navigation.navigate("Home");
       }
       catch (e) {
         console.log(e);
@@ -77,38 +80,8 @@ const SignUpScreen = () => {
     }
     try {
       const user = (await signInWithEmailAndPassword(auth, email, password)).user;
-      // const claims = (await user.getIdTokenResult()).claims;
       Toast.success(`Welcome ${user.displayName}`);
-
-      // if (!claims.email_verified) {
-      //   try {
-      //     const res = await axios.post(`${API_URL}/api/resend-otp`, { token: await user.getIdToken() });
-      //     setLoginButtonDisable(false);
-      //     if (res.statusText !== "OK") {
-      //       Toast.error("Error sending email");
-      //       try{
-      //         await signOut(auth);
-      //       }
-      //       catch(e){}
-      //       return;
-      //     }
-      //     Toast.info("Please verify your email");
-      //     // navigate("/verify-email");
-      //   } catch (e) {
-      //     Toast.error("Network unavailable! Try again");
-      //     try{
-      //       await signOut(auth);
-      //     }
-      //     catch(e){}
-      //   }
-      // }
-      // else if (!claims.info || claims.info === null) {
-      //   Toast.info("Please complete your profile");
-      //   // navigate("/user-details");
-      // } else {
-      //   Toast.info(`Welcome ${user.displayName}`);
-      //   // window.history.back();
-      // }
+      navigation.navigate("Home");
     }
     catch (e) {
       console.log(e);
@@ -116,6 +89,7 @@ const SignUpScreen = () => {
       console.log(errorCode);
       try {
         await signOut(auth);
+        navigation.navigate("SignIn");
       }
       catch (e) {
         console.log(e);

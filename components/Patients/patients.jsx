@@ -34,17 +34,14 @@ const Patients = () => {
 
   const [patients, setPatients] = useState(null);
 
-  useEffect(() => {
-    getPatients();
-  }, []);
-
   const getPatients = async () => {
     const userId = '2FZilBl6rlRI5IsPYMmyMtbFJrG2';
     try {
       const res = await axios.post(`${API_URL}/api/patientslist`, {
         docId: userId,
       });
-      const datas = await res.data;
+      let datas = await res.data;
+      datas = datas.filter(data => data.status)
       setData(datas);
       Toast.success(`Total patients: ${datas.length}`);
       setPatients(paginate(datas));
@@ -54,6 +51,10 @@ const Patients = () => {
     }
   };
 
+  useEffect(() => {
+    getPatients();
+  }, []);
+  
   const prev = () => {
     if (page > 0) {
       setPage(page - 1);
