@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { auth } from "../../utils/firebase";
+import { clientAuth } from "../../utils/firebase";
 import { useNavigation } from '@react-navigation/native';
 import {
   View,
@@ -35,7 +35,8 @@ const Patients = () => {
   const [patients, setPatients] = useState(null);
 
   const getPatients = async () => {
-    const userId = '2FZilBl6rlRI5IsPYMmyMtbFJrG2';
+    // const userId = '2FZilBl6rlRI5IsPYMmyMtbFJrG2';
+    const userId = clientAuth.currentUser.uid;
     try {
       const res = await axios.post(`${API_URL}/api/patientslist`, {
         docId: userId,

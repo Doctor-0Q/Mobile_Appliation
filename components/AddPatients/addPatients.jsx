@@ -24,6 +24,7 @@ import API_URL from "../../config";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Toast } from "toastify-react-native";
 import { useNavigation } from '@react-navigation/native';
+import { clientAuth } from "../../utils/firebase";
 
 export default function AddPatients() {
   const initialPatientInfo = {
@@ -117,12 +118,11 @@ export default function AddPatients() {
       month < 10 ? "0" + month : month
     }-${year}`;
   };
-  const userId = '2FZilBl6rlRI5IsPYMmyMtbFJrG2';
+  
   const handleAddPatient = async () => {
     try {
-      console.log("hello")
-      // const data = { ...patientInfo, uid: user.userId }
-      const data = { ...patientInfo, uid:userId }
+      const token = await clientAuth.currentUser.getIdToken();
+      const data = { ...patientInfo, token:token }
       console.log(data)
       const res = await fetch(`${API_URL}/api/addPatients`, {
       method: 'POST',
