@@ -16,6 +16,7 @@ import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { clientAuth } from "../utils/firebase";
 import { Toast } from "toastify-react-native";
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
@@ -57,7 +58,9 @@ const SignUpScreen = () => {
         return;
       }
       try {
-        await signInWithEmailAndPassword(clientAuth, email, password);
+        const user = (await signInWithEmailAndPassword(clientAuth, email, password)).user;
+        const token = await user.getIdToken();
+        await AsyncStorage.setItem("doc-qToken", token);
         navigation.navigate("Home");
       }
       catch (e) {
@@ -80,6 +83,8 @@ const SignUpScreen = () => {
     }
     try {
       const user = (await signInWithEmailAndPassword(clientAuth, email, password)).user;
+      const token = await user.getIdToken();
+      await AsyncStorage.setItem("doc-qToken", token);
       Toast.success(`Welcome ${user.displayName}`);
       navigation.navigate("Home");
     }
@@ -89,6 +94,7 @@ const SignUpScreen = () => {
       console.log(errorCode);
       try {
         await signOut(clientAuth);
+        await AsyncStorage.removeItem("doc-qToken");
         navigation.navigate("SignIn");
       }
       catch (e) {

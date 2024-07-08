@@ -1,5 +1,24 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { initializeAuth } from 'firebase/auth';
+
+// function getReactNativePersistence(storage) {
+//     return {
+//       type: 'LOCAL',
+//       storage: {
+//         setItem: async (key, value) => {
+//           await storage.setItem(key, value);
+//         },
+//         getItem: async (key) => {
+//           return await storage.getItem(key);
+//         },
+//         removeItem: async (key) => {
+//           await storage.removeItem(key);
+//         },
+//       },
+//     };
+//   }
 
 const firebaseConfig = {
     apiKey: "AIzaSyDxOVWoIQydSmoNWp8G9ZuBfC9XMFYvnh4",
@@ -13,5 +32,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const clientAuth = getAuth(app);
+
+// Initialize Firebase Auth with custom persistence
+// const clientAuth = initializeAuth(app, {
+//     persistence: getReactNativePersistence(AsyncStorage)
+// });
 
 export { clientAuth };
