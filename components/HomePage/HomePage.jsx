@@ -12,10 +12,10 @@ import docimg from "../../assets/Homepage/Pic.png";
 import clinic from "../../assets/Homepage/clinic.png";
 import doc from "../../assets/Homepage/doc.png";
 import banner from "../../assets/Homepage/banner.png";
-import Notification from "../../assets/Homepage/Notification.png";
-import Stethoscope from "../../assets/Homepage/Stethoscope.png";
+import notification from "../../assets/Homepage/Notification.png";
+import stethoscope from "../../assets/Homepage/Stethoscope.png";
 import heart from "../../assets/Homepage/heart.png";
-import HandHeart from "../../assets/Homepage/HandHeart.png";
+import handHeart from "../../assets/Homepage/HandHeart.png";
 import Pill from "../../assets/Homepage/Pill.png";
 import { showLocation } from "../../utils/functions";
 import API_URL from "../../config";
@@ -54,7 +54,7 @@ const HomePage = () => {
         </View>
         <TouchableOpacity>
           <Image
-            source={Notification} // Replace with your icon URL
+            source={notification} // Replace with your icon URL
             className="w-8 h-8  mr-3"
           />
         </TouchableOpacity>
@@ -91,7 +91,7 @@ const HomePage = () => {
           {/* Repeat for other service icons */}
           <View className="items-center w-[70px] h-20 bg-[#F3F4F6]">
             <Image
-              source={Stethoscope} // Replace with your icon URL
+              source={stethoscope} // Replace with your icon URL
               className="w-9 h-9 mt-2"
             />
             <Text className="text-[#7D8A95] mt-1">Doctor</Text>
@@ -112,7 +112,7 @@ const HomePage = () => {
           </View>
           <View className="items-center w-[70px] h-20 bg-[#F3F4F6]">
             <Image
-              source={HandHeart} // Replace with your icon URL
+              source={handHeart} // Replace with your icon URL
               className="w-9 h-9 mt-2"
             />
             <Text className="text-[#7D8A95] mt-1">Doctor</Text>

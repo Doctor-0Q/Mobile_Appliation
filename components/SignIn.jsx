@@ -8,12 +8,12 @@ import {
   ScrollView,
 } from "react-native";
 import { styled } from "nativewind";
-import img from "../../assets/images/signinbg.png";
+import img from "../assets/images/signinbg.png";
 import { SafeAreaView } from "react-native-safe-area-context";
-import API_URL from "../../config";
+import API_URL from "../config";
 import axios from "axios";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { clientAuth } from "../../utils/firebase";
+import { clientAuth } from "../utils/firebase";
 import { Toast } from "toastify-react-native";
 import { useNavigation } from '@react-navigation/native';
 
