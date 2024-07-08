@@ -1,1 +1,102 @@
 //  CREATE YOUR DUMMY DATA HERE ONLY
+export const data = [
+    {
+        "Name": "Mary Joseph",
+        "Diagnosis": "Malaria",
+        "Status": "Recovered",
+        "Last Appointment": "20/10/2022",
+        "Next Appointment": "1/12/2022",
+        "Option": "..."
+    },
+
+    {
+        "Name": "Tina Adekeye",
+        "Diagnosis": "Syphilis",
+        "Status": "Recovered",
+        "Last Appointment": "19/10/2022",
+        "Next Appointment": "5/12/2022",
+        "Option": "..."
+    },
+    {
+        "Name": "jhon doe",
+        "Diagnosis": "Malaria",
+        "Status": "Recovered",
+        "Last Appointment": "17/10/2022",
+        "Next Appointment": "2/12/2022",
+        "Option": "..."
+    },
+
+    {
+        "Name": "Amala Jones",
+        "Diagnosis": "Stroke",
+        "Status": "Awaiting surgery",
+        "Last Appointment": "11/10/2022",
+        "Next Appointment": "1/12/2022",
+        "Option": "..."
+    },
+    {
+        "Name": "Damilola Oyinda",
+        "Diagnosis": "Liver failure",
+        "Status": "On treatment",
+        "Last Appointment": "9/10/2022",
+        "Next Appointment": "1/11/2022",
+        "Option": "..."
+    },
+    {
+        "Name": "Selim jubril",
+        "Diagnosis": "Typhoid",
+        "Status": "Awaiting surgery",
+        "Last Appointment": "12/10/2022",
+        "Next Appointment": "2/12/2022",
+        "Option": "..."
+    },
+    {
+        "Name": "Paul christian",
+        "Diagnosis": "Gonorrhea",
+        "Status": "On treatment",
+        "Last Appointment": "22/10/2022",
+        "Next Appointment": "3/12/2022",
+        "Option": "..."
+    },
+    {
+        "Name": "Rosabel Briggs",
+        "Diagnosis": "Malaria",
+        "Status": "Recovered",
+        "Last Appointment": "23/10/2022",
+        "Next Appointment": "4/12/2022",
+        "Option": "..."
+    },
+    {
+        "Name": "Tina Adekeye",
+        "Diagnosis": "Syphilis",
+        "Status": "Recovered",
+        "Last Appointment": "19/10/2022",
+        "Next Appointment": "5/12/2022",
+        "Option": "..."
+    },
+    {
+        "Name": "Mark Bossman",
+        "Diagnosis": "Malaria",
+        "Status": "Recovered",
+        "Last Appointment": "17/10/2022",
+        "Next Appointment": "2/12/2022",
+        "Option": "..."
+    },
+
+    {
+        "Name": "Amala Jones",
+        "Diagnosis": "Stroke",
+        "Status": "Awaiting surgery",
+        "Last Appointment": "11/10/2022",
+        "Next Appointment": "1/12/2022",
+        "Option": "..."
+    },
+    {
+        "Name": "Damilola Oyinda",
+        "Diagnosis": "Liver failure",
+        "Status": "On treatment",
+        "Last Appointment": "9/10/2022",
+        "Next Appointment": "1/11/2022",
+        "Option": "..."
+    }
+]

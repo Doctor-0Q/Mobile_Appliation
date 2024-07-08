@@ -5,7 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomePage from "./components/HomePage/HomePage";
 import SignIn from './components/LandingPages/SignIn';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/Ionicons'; 
+import Icon from 'react-native-vector-icons/Ionicons';
 import ProfileSettings from "./components/ProfileSettings/ProfileSettings.jsx"
 import Search from "./components/searchpage/Search.jsx"
 import logo from "./components/Logopage.jsx"
@@ -16,10 +16,11 @@ import { clientAuth } from "./utils/firebase.js";
 import ToastManager from "toastify-react-native";
 import EmailVerification from "./components/EmailVerification.jsx";
 import Logout from "./components/Logout.jsx";
+// import AppNavigator from "./components/LandingPages/AppNavigator.jsx";
 import SettingPage from "./components/settings/SettingPage.jsx";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-
+import Doctorprofile from "./components/LandingPages/doctorprofile/Doctorprofile.jsx";
 const App = () => {
   const [isDoctor, setIsDoctor] = useState(!true);
   const [user, setUser] = useState(!true);
@@ -135,6 +136,9 @@ const App = () => {
                             <Tab.Screen name="Search" component={Search} />
                             <Tab.Screen name="location" component={logo} />
                             <Tab.Screen name="Notifications" component={onboarding} />
+                            <Tab.Screen name="Doctorprofile" component={Doctorprofile}
+                            />
+                            {/* <AppNavigator /> */}
                             {user ?
                               <Tab.Screen name="Profile" component={ProfileSettings} />
                               :
@@ -154,6 +158,7 @@ const App = () => {
     </>
   );
 };
+
 
 const styles = StyleSheet.create({
   focusedIconContainer: {
