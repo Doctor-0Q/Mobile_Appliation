@@ -3,6 +3,7 @@ import { Text, View } from 'react-native'
 import { clientAuth } from '../utils/firebase';
 import { signOut } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Logout() {
     const navigation = useNavigation();
@@ -19,6 +20,7 @@ function Logout() {
 
     const handleLogout = async () => {
         await signOut(clientAuth);
+        await AsyncStorage.removeItem("doc-qToken");
         console.log("User Signed Out");
         setUser(false);
         navigation.navigate("Sign In");

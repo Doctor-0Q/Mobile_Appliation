@@ -3,7 +3,7 @@ import { Image, View, Text, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomePage from "./components/HomePage/HomePage";
-import SignIn from './components/LandingPages/SignIn';
+import SignIn from './components/SignIn.jsx';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ProfileSettings from "./components/ProfileSettings/ProfileSettings.jsx"
@@ -18,6 +18,7 @@ import EmailVerification from "./components/EmailVerification.jsx";
 import Logout from "./components/Logout.jsx";
 // import AppNavigator from "./components/LandingPages/AppNavigator.jsx";
 import SettingPage from "./components/settings/SettingPage.jsx";
+import Doctorprofile from "./components/LandingPages/doctorprofile/Doctorprofile.jsx";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 import Doctorprofile from "./components/LandingPages/doctorprofile/Doctorprofile.jsx";
