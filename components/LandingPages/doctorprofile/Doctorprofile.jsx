@@ -1,8 +1,9 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
 import React, { useState, useEffect } from "react";
+import { View, Text, Image, TouchableOpacity, FlatList } from "react-native";
 import doctorpicture from "../../../assets/doctor/doctor-profile.png";
 import doctorprofile from "../../../assets/doctor/doctor profile pic.jpeg";
-import DoctorAppointment from "./DoctorAppointment";
+// import DoctorAppointment from "./DoctorAppointment";
+import TimeSlotBooking from "./TimeSlotBooking";
 import Animated, {
   interpolate,
   useAnimatedRef,
@@ -13,7 +14,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { Feather, FontAwesome } from "@expo/vector-icons";
 
-const Doctorprofile = () => {
+const Doctorprofile = ({ route }) => {
+  const { item } = route.params; // Extracting item from navigation route
   const scrollref = useAnimatedRef();
   const scrollOffset = useScrollViewOffset(scrollref);
   const [showHeader, setShowHeader] = useState(false);
@@ -57,7 +59,7 @@ const Doctorprofile = () => {
   };
 
   return (
-    <View className="flex bg-[#003B2E80] min-h-full">
+    <View style={{ flex: 1, backgroundColor: "#003B2E80" }}>
       <Animated.FlatList
         ref={scrollref}
         data={[{ key: "content" }]} // Using a single item to wrap your content
@@ -67,62 +69,137 @@ const Doctorprofile = () => {
               source={doctorpicture}
               style={[{ height: 400, width: "100%" }, imageAnimatedStyle]}
             />
-            <View className="h-[1500px] bg-[#fff] p-4 rounded-3xl">
+            <View
+              style={{
+                backgroundColor: "#fff",
+                padding: 20,
+                borderRadius: 30,
+                marginTop: -50,
+                minHeight: "100%",
+              }}
+            >
               {showHeader && (
                 <Animated.View style={[headerAnimatedStyle]}>
-                  <View className="items-center justify-center py-2">
-                    <View className="h-20 w-20 rounded-full overflow-hidden">
+                  <View
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                      paddingVertical: 10,
+                    }}
+                  >
+                    <View
+                      style={{
+                        height: 100,
+                        width: 100,
+                        borderRadius: 50,
+                        overflow: "hidden",
+                      }}
+                    >
                       <Image
                         source={doctorprofile}
                         resizeMode="cover"
-                        className="h-full w-full"
+                        style={{ flex: 1, width: undefined, height: undefined }}
                       />
                     </View>
-                    <Text className="text-lg font-bold">DR. Kim Derek</Text>
-                    <Text className="text-[#777777]">ENT Surgeon</Text>
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        fontWeight: "bold",
+                        color: "#fff",
+                      }}
+                    >
+                      {item.Name}
+                    </Text>
+                    <Text style={{ color: "#777777", marginTop: 5 }}>
+                      ENT Surgeon
+                    </Text>
                   </View>
                 </Animated.View>
               )}
               {!showHeader && (
                 <>
-                  <View className="h-1 w-16 bg-[#000000] mx-auto my-2 rounded"></View>
-                  <View className="flex-row items-center justify-between">
-                    <Text className="text-3xl font-bold text-center">
-                      DR. Kim Derek
+                  <View
+                    style={{
+                      height: 1,
+                      width: 16,
+                      backgroundColor: "#000000",
+                      marginVertical: 10,
+                      borderRadius: 3,
+                    }}
+                  ></View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 30,
+                        fontWeight: "bold",
+                        textAlign: "center",
+                      }}
+                    >
+                      {item.Name}
                     </Text>
-                    <TouchableOpacity className="ml-3">
+                    <TouchableOpacity>
                       <Feather name="bookmark" size={24} color="#000" />
                     </TouchableOpacity>
                   </View>
-                  <Text className="text-lg text-[#777777] mb-3 mx-1">
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      color: "#777777",
+                      marginVertical: 10,
+                    }}
+                  >
                     ENT Surgeon
                   </Text>
-                  <Text className="text-sm text-left mb-5 px-2">
-                    Dr. Kim Derek, is a distinguished ENT surgeon renowned for
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      textAlign: "left",
+                      marginVertical: 10,
+                    }}
+                  >
+                    Dr. {item.Name}, is a distinguished ENT surgeon renowned for
                     her expertise in diagnosing and treating conditions
                     affecting the ear, nose, and throat. With a passion for
-                    improving patients' quality of life, Dr. Chen combines
-                    compassion with cutting-edge medical knowledge to provide
-                    comprehensive care.
+                    improving patients' quality of life, Dr. {item.Name}{" "}
+                    combines compassion with cutting-edge medical knowledge to
+                    provide comprehensive care.
                   </Text>
-                  <View className="flex-row gap-1 items-center mb-2">
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      marginVertical: 5,
+                    }}
+                  >
                     <FontAwesome name="star" size={20} color="#FFD700" />
                     <FontAwesome name="star" size={20} color="#FFD700" />
                     <FontAwesome name="star" size={20} color="#FFD700" />
                     <FontAwesome name="star" size={20} color="#FFD700" />
                     <FontAwesome name="star" size={20} color="#3F3E3C" />
-                    <Text className="text-base ml-2">4.66</Text>
+                    <Text style={{ fontSize: 18, marginLeft: 5 }}>4.66</Text>
                   </View>
-                  <View className="flex-row items-center">
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      marginVertical: 5,
+                    }}
+                  >
                     <Feather name="clock" size={16} color="#7B7B7B" />
-                    <Text className="text-[#7B7B7B] ml-2">
+                    <Text style={{ color: "#7B7B7B", marginLeft: 5 }}>
                       04:00 PM - 08:00 PM
                     </Text>
                   </View>
                 </>
               )}
               <View>
-                <DoctorAppointment />
+                <TimeSlotBooking />
               </View>
             </View>
           </>
