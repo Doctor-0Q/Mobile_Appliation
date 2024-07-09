@@ -32,16 +32,10 @@ const Search = () => {
   }, []);
 
   useEffect(() => {
-    if (search === "") {
+    if (search === "")
       setFilteredDoctors([]);
-    } else if (searchBy === "name")
+    if (search !== "" && searchBy === "name")
       filterDoctorsByName();
-
-    showLocation(null, search, null);
-    // const data = await showLocation(null, search, null);
-    // if (data) {
-    //   navigation.navigate("Home");
-    // }
   }, [search, doctors, searchBy]);
 
   const handleSearch = async (e) => {
@@ -89,8 +83,8 @@ const Search = () => {
           <AntDesign name="search1" size={24} color="black" />
         </View>
       </View>
-    
-       {filteredDoctors.length > 0 && (
+
+      {filteredDoctors.length > 0 && (
         <FlatList
           data={filteredDoctors}
           keyExtractor={(item) => item.id.toString()}
@@ -106,7 +100,7 @@ const Search = () => {
           className="absolute top-24 left-0 right-0 bg-white z-10"
         />
       )}
-        {/* <ScrollView>
+      {/* <ScrollView>
         {filteredData.map((item, index) => (
           <TouchableOpacity key={index} onPress={() => navigateToProfile(item)}>
             <View

@@ -24,9 +24,7 @@
       },
       "package": "com.ksshreyas482.test"
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
+    "icon": "./assets/DOC-Q_icon.jpg",
     "extra": {
       "eas": {
         "projectId": "2406dc3c-9ac1-4035-af47-9be0e2ee16e9"

@@ -84,7 +84,27 @@ const SignUpScreen = () => {
     try {
       const user = (await signInWithEmailAndPassword(clientAuth, email, password)).user;
       const token = await user.getIdToken();
-      await AsyncStorage.setItem("doc-qToken", token);
+      const res = await fetch(`${API_URL}/api/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ custToken: token })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        Toast.warn(data);
+        return;
+      }
+      console.log(data);
+      const jsonValue = JSON.stringify(data)
+      await AsyncStorage.setItem("doc-qToken", jsonValue, (error) => {
+        if (error) {
+          console.error('Failed to save the data to the storage', error);
+        } else {
+          console.log('Data successfully stored');
+        }
+      });
       Toast.success(`Welcome ${user.displayName}`);
       navigation.navigate("Home");
     }
@@ -93,8 +113,8 @@ const SignUpScreen = () => {
       const errorCode = e.code;
       console.log(errorCode);
       try {
-        await signOut(clientAuth);
         await AsyncStorage.removeItem("doc-qToken");
+        await signOut(clientAuth);
         navigation.navigate("SignIn");
       }
       catch (e) {
