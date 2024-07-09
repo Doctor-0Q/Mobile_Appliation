@@ -4,14 +4,16 @@ import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Toast } from "toastify-react-native";
 import { showLocation } from "../../utils/functions";
+import API_URL from "../../config";
 
 const Search = () => {
   const navigation = useNavigation();
   const [search, setSearch] = useState("");
   const [doctors, setDoctors] = useState([]);
   const [filteredDoctors, setFilteredDoctors] = useState([]);
+  const [doctorId,setDoctorId] =useState();
   const [searchBy, setSearchBy] = useState("name");
-
+ 
   const getDoctorNames = async () => {
     const response = await fetch(`${API_URL}/api/search/doctors`);
     const data = await response.json();
@@ -37,11 +39,6 @@ const Search = () => {
     } else if (searchBy === "name")
       filterDoctorsByName();
 
-    showLocation(null, search, null);
-    // const data = await showLocation(null, search, null);
-    // if (data) {
-    //   navigation.navigate("Home");
-    // }
   }, [search, doctors, searchBy]);
 
   const handleSearch = async (e) => {
@@ -64,10 +61,14 @@ const Search = () => {
 
   };
 
-  const navigateToProfile = (item) => {
-    navigation.navigate("Doctorprofile", { item });
+  // const navigateToProfile = (item) => {
+  //   navigation.navigate("Doctorprofile", { item });
+  // };
+  const handlePress = (id) => {
+    setDoctorId(id);
+    console.log(doctorId);
+    navigation.navigate('Doctorprofile', { doctorId: id });
   };
-
 
   return (
     <View className="mt-4 relative">
@@ -96,7 +97,7 @@ const Search = () => {
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => navigation.navigate('DoctorDetails', { doctorId: item.id })}
+              onPress={() => handlePress(item.id)}
               className="p-2 border-b border-gray-200"
             >
               <Text className="text-lg">{item.name}</Text>

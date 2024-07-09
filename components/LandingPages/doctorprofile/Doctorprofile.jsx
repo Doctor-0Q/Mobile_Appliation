@@ -13,18 +13,48 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { Feather, FontAwesome } from "@expo/vector-icons";
+import { useRoute } from "@react-navigation/native";
+import API_URL from "../../../config";
+// import styles from "toastify-react-native/components/styles";
 
-const Doctorprofile = ({ route }) => {
-  const { item } = route.params; // Extracting item from navigation route
+
+const Doctorprofile = () => {
+  // const { item } = route.params; // Extracting item from navigation route
+  // if(!item){
+  //   return (
+  //     <View>no item</View>
+  //   )
+  // }
   const scrollref = useAnimatedRef();
   const scrollOffset = useScrollViewOffset(scrollref);
   const [showHeader, setShowHeader] = useState(false);
   const headerOpacity = useSharedValue(0);
-
-  useEffect(() => {
-    headerOpacity.value = withTiming(showHeader ? 1 : 0, { duration: 300 });
-  }, [showHeader]);
-
+  const route=useRoute()
+  const {doctorId}=route.params;
+  const [docData,setDocData]=useState([]);
+  const fetchDoctorProfile = async () => {
+    try {
+      uid=doctorId;
+      console.log(uid);
+      const res = await fetch(`${API_URL}/api/doctor/profile/${uid}`);
+      const datas = await res.json();
+      console.log(datas);
+      setDocData(datas);
+      console.log(docData.name);
+    } catch (error) {
+      toast.error("Error fetching doctor profile");
+      return;
+    }
+  };
+  // useEffect(() => {
+  //   console.log("this",doctorId);
+  //   fetchDoctorProfile();
+  //   headerOpacity.value = withTiming(showHeader ? 1 : 0, { duration: 300 });
+    
+  // }, [showHeader]);
+ useEffect(() => {
+    fetchDoctorProfile();
+  }, [doctorId]); 
   const imageAnimatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
@@ -108,10 +138,20 @@ const Doctorprofile = ({ route }) => {
                         color: "#fff",
                       }}
                     >
-                      {item.Name}
+                      {docData?.name}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        fontWeight: "bold",
+                        color: "#fff",
+                      }}
+                    >
+                      {docData?.name}
                     </Text>
                     <Text style={{ color: "#777777", marginTop: 5 }}>
-                      ENT Surgeon
+                      {/* ENT Surgeon */}
+                      {docData?.specializations}
                     </Text>
                   </View>
                 </Animated.View>
@@ -141,7 +181,20 @@ const Doctorprofile = ({ route }) => {
                         textAlign: "center",
                       }}
                     >
-                      {item.Name}
+                      {/* {item.Name} */}
+                      {docData?.name}
+                      {'\n'}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        fontWeight: "bold",
+                        // textAlign: "flex-end", 
+                      }}
+                    >
+                      {/* {item.Name} */}
+                      {docData?.city}
+                      
                     </Text>
                     <TouchableOpacity>
                       <Feather name="bookmark" size={24} color="#000" />
@@ -154,7 +207,7 @@ const Doctorprofile = ({ route }) => {
                       marginVertical: 10,
                     }}
                   >
-                    ENT Surgeon
+                    {docData?.specializations}
                   </Text>
                   <Text
                     style={{
@@ -163,10 +216,10 @@ const Doctorprofile = ({ route }) => {
                       marginVertical: 10,
                     }}
                   >
-                    Dr. {item.Name}, is a distinguished ENT surgeon renowned for
+                    Dr.   {docData?.name}, is a distinguished ENT surgeon renowned for
                     her expertise in diagnosing and treating conditions
                     affecting the ear, nose, and throat. With a passion for
-                    improving patients' quality of life, Dr. {item.Name}{" "}
+                    improving patients' quality of life, Dr.{docData?.name}{" "}
                     combines compassion with cutting-edge medical knowledge to
                     provide comprehensive care.
                   </Text>
@@ -204,7 +257,8 @@ const Doctorprofile = ({ route }) => {
             </View>
           </>
         )}
-        keyExtractor={(item) => item.key}
+        // keyExtractor={(docData) => docData.key}
+        // {docData?.name}
         onScroll={handleScroll}
         scrollEventThrottle={16}
       />
