@@ -21,7 +21,6 @@ import SettingPage from "./components/settings/SettingPage.jsx";
 import Doctorprofile from "./components/LandingPages/doctorprofile/Doctorprofile.jsx";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-
 const App = () => {
   const [isDoctor, setIsDoctor] = useState(!true);
   const [user, setUser] = useState(!true);

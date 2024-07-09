@@ -161,6 +161,7 @@ function DoctorDrawerScreen() {
                             headerRight: () => <SearchBar />,
                             // drawerIcon: () => <Image source={addPatientsIcon} style={styles.icon} />, // Replace with appropriate icon
                         }}
+                        
                     />
                 </Drawer.Navigator>
 

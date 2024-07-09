@@ -1,16 +1,19 @@
-import { View, Text, TextInput, TouchableOpacity, FlatList } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, FlatList, ScrollView, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Toast } from "toastify-react-native";
 import { showLocation } from "../../utils/functions";
+import API_URL from "../../config";
 
 const Search = () => {
   const navigation = useNavigation();
   const [search, setSearch] = useState("");
   const [doctors, setDoctors] = useState([]);
   const [filteredDoctors, setFilteredDoctors] = useState([]);
+  const [doctorId, setDoctorId] = useState();
   const [searchBy, setSearchBy] = useState("name");
+  const [doctorData, setDoctorData] = useState([]);
 
   const getDoctorNames = async () => {
     const response = await fetch(`${API_URL}/api/search/doctors`);
@@ -47,21 +50,20 @@ const Search = () => {
     }
 
     if (searchBy === "location") {
-      showLocation(null, search, null);
-      // const data = await showLocation(null, search, null);
-      // if (data) {
-      //   navigation.navigate("Home");
-      // }
+      const data = await showLocation(null, search, null);
+      console.log(data.length);
+      setDoctorData(data);
+      console.log("Doctor data by location:", data);
     } else {
       filterDoctorsByName();
     }
-
   };
 
-  const navigateToProfile = (item) => {
-    navigation.navigate("Doctorprofile", { item });
+  const handlePress = (id) => {
+    setDoctorId(id);
+    console.log("Selected doctor ID:", id);
+    navigation.navigate('Doctorprofile', { doctorId: id });
   };
-
 
   return (
     <View className="mt-4 relative">
@@ -84,49 +86,30 @@ const Search = () => {
         </View>
       </View>
 
-      {filteredDoctors.length > 0 && (
+
+      {searchBy === "location" && doctorData.length > 0 && (
         <FlatList
-          data={filteredDoctors}
-          keyExtractor={(item) => item.id.toString()}
+          data={doctorData}
+          keyExtractor={(item) => (item.uid ? item.uid.toString() : Math.random().toString())}
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => navigation.navigate('DoctorDetails', { doctorId: item.id })}
-              className="p-2 border-b border-gray-200"
-            >
-              <Text className="text-lg">{item.name}</Text>
-              <Text className="text-sm text-gray-600">{item.specialization}</Text>
-            </TouchableOpacity>
-          )}
-          className="absolute top-24 left-0 right-0 bg-white z-10"
-        />
-      )}
-      {/* <ScrollView>
-        {filteredData.map((item, index) => (
-          <TouchableOpacity key={index} onPress={() => navigateToProfile(item)}>
-            <View
+              onPress={() => handlePress(item.uid)}
               style={{
-                padding: 20,
+                padding: 12,
                 borderBottomWidth: 1,
-                borderBottomColor: "#ccc",
-                marginVertical: 5,
-                marginLeft: 20,
+                borderBottomColor: "lightgray",
               }}
             >
-              <Text style={{ fontSize: 20 }}>{item.Name}</Text>
-              <Text style={{ color: "#777", fontSize: 16 }}>
-                {item.Diagnosis}
-              </Text>
-              <Text style={{ color: "#777", fontSize: 16 }}>{item.Status}</Text>
-              <Text style={{ color: "#777", fontSize: 16 }}>
-                Last Appointment: {item["Last Appointment"]}
-              </Text>
-              <Text style={{ color: "#777", fontSize: 16 }}>
-                Next Appointment: {item["Next Appointment"]}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </ScrollView> */}
+              <Text style={{ fontSize: 18 }}>{item.data.name}</Text>
+              <Text style={{ fontSize: 14, color: "gray" }}>{item.data.specializations}</Text>
+            </TouchableOpacity>
+          )}
+          contentContainerStyle={{
+            paddingHorizontal: 4,
+            paddingBottom: 24,
+          }}
+        />
+      )}
     </View>
   );
 };
