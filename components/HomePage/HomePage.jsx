@@ -18,37 +18,14 @@ import heart from "../../assets/Homepage/heart.png";
 import handHeart from "../../assets/Homepage/HandHeart.png";
 import Pill from "../../assets/Homepage/Pill.png";
 import { showLocation } from "../../utils/functions";
-// import API_URL from "../../config";
 import { Toast } from "toastify-react-native";
-// import docimg from "../../assets/Homepage/Pic.png";
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { clientAuth } from "../../utils/firebase";
-import { signInWithCustomToken } from "firebase/auth";
 
 
 const HomePage = () => {
   const navigation = useNavigation();
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
-  const getToken = async () => {
-    const token = await AsyncStorage.getItem("doc-qToken");
-    if (token) {
-      try {
-        await signInWithCustomToken(clientAuth, JSON.parse(token));
-      }
-      catch (err) { }
-      finally {
-        setLoading(false);
-      }
-    }
-    else {
-      setLoading(false);
-    }
-  }
-  useEffect(() => {
-    getToken();
-  }, []);
+  
   const handleSearch = async (e) => {
     e.preventDefault();
 
@@ -65,11 +42,7 @@ const HomePage = () => {
   }
   return (
     <>
-      {loading ?
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-          <Text className="text-center">Loading...</Text>
-        </View>
-        :
+      {
         <ScrollView className="bg-white p-4">
           {/* Header */}
           <View className="flex-row items-center justify-between">
