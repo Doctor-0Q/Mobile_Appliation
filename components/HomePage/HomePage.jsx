@@ -42,6 +42,9 @@ const HomePage = () => {
         setLoading(false);
       }
     }
+    else {
+      setLoading(false);
+    }
   }
   useEffect(() => {
     getToken();

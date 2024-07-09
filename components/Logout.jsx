@@ -9,7 +9,6 @@ function Logout() {
     useEffect(() => {
         clientAuth.onAuthStateChanged(async (user) => {
             if (!user) {
-                console.log("No user is logged in");
                 setUser(false);
             }
         });

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Image, View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomePage from "./components/HomePage/HomePage";
@@ -16,7 +16,6 @@ import { clientAuth } from "./utils/firebase.js";
 import ToastManager from "toastify-react-native";
 import EmailVerification from "./components/EmailVerification.jsx";
 import Logout from "./components/Logout.jsx";
-// import AppNavigator from "./components/LandingPages/AppNavigator.jsx";
 import SettingPage from "./components/settings/SettingPage.jsx";
 import Doctorprofile from "./components/LandingPages/doctorprofile/Doctorprofile.jsx";
 const Stack = createStackNavigator();
@@ -138,7 +137,6 @@ const App = () => {
                             <Tab.Screen name="Notifications" component={onboarding} />
                             <Tab.Screen name="Doctorprofile" component={Doctorprofile}
                             />
-                            {/* <AppNavigator /> */}
                             {user ?
                               <Tab.Screen name="Profile" component={ProfileSettings} />
                               :

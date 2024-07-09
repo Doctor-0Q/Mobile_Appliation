@@ -86,6 +86,23 @@ const Search = () => {
         </View>
       </View>
 
+      {searchBy === "name" && filteredDoctors.length > 0 && (
+        <FlatList
+          data={filteredDoctors}
+          keyExtractor={(item) => (item.id ? item.id.toString() : Math.random().toString())}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => handlePress(item.id)}
+              className="p-2 border-b border-gray-200"
+            >
+              <Text className="text-lg">{item.name}</Text>
+              <Text className="text-sm text-gray-600">{item.specializations}</Text>
+            </TouchableOpacity>
+          )}
+          className="absolute top-24 left-0 right-0 bg-white z-10"
+        />
+      )}
+
 
       {searchBy === "location" && doctorData.length > 0 && (
         <FlatList
