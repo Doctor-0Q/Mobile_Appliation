@@ -250,8 +250,31 @@ const Search = () => {
           borderBottomColor: "lightgray",
         }}
       >
-        <Text style={{ fontSize: 18 }}>{item.data.name}</Text>
-        <Text style={{ fontSize: 14, color: "gray" }}>{item.data.specializations}</Text>
+        {/* <Text style={{ fontSize: 18 }}></Text>
+        <Text style={{ fontSize: 14, color: "gray" }}>{item.data.specializations}</Text> */}
+        <View className=" p-4 mt-4 rounded-lg text-[#004D6C]  shadow-sm">
+          <View className="flex-row items-center">
+            {/* <Image
+              source={doc} 
+              className=" w-24 h-24 "
+            /> */}
+            <View className="ml-3 ">
+              <Text className="font-semibold text-[#004D6C]">
+              {item.data.name}
+              </Text>
+              <Text className="text-[#004D6C]">{item.data.specializations}</Text>
+              <View className="flex-row items-center mt-2">
+                <Text className="text-yellow-500 ">4.8 ⭐️</Text>
+                <Text className="ml-2 text-[#004D6C]">10:30am - 5:30pm</Text>
+              </View>
+            </View>
+          </View>
+          <TouchableOpacity className="mt-4 bg-[#F0F4FC] py-2 rounded-lg">
+            <Text className="text-center text-[#004D6C] text-xl font-bold">
+              Book Appointment
+            </Text>
+          </TouchableOpacity>
+        </View>
       </TouchableOpacity>
     )}
     contentContainerStyle={{
