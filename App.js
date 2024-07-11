@@ -18,6 +18,8 @@ import EmailVerification from "./components/EmailVerification.jsx";
 import Logout from "./components/Logout.jsx";
 import SettingPage from "./components/settings/SettingPage.jsx";
 import Doctorprofile from "./components/LandingPages/doctorprofile/Doctorprofile.jsx";
+import DoctorDetails from "./components/Details/DoctorDetails";
+import PatientDetails from "./components/Details/PatientDetails";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const App = () => {
@@ -81,7 +83,8 @@ const App = () => {
               <>
                 <NavigationContainer>
                   <Tab.Navigator>
-                    <Tab.Screen name="Details" component={ProfileSettings} />
+                    {isDoctor && <Tab.Screen name="DoctorDetails" component={DoctorDetails} />} 
+                    {!isDoctor && <Tab.Screen name="PatientDetails" component={PatientDetails} />}                   
                     <Tab.Screen name="LogOut" component={Logout} />
                   </Tab.Navigator>
                 </NavigationContainer>

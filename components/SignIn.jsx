@@ -107,7 +107,6 @@ const SignUpScreen = () => {
         }
       });
       Toast.success(`Welcome ${user.displayName}`);
-      navigation.navigate("Home");
     }
     catch (e) {
       console.log(e);

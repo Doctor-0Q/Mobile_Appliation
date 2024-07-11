@@ -48,7 +48,7 @@ const EmailVerification = () => {
         let timer;
         if (disableGetOtpButton) {
           timer = setTimeout(() => {
-            setIsDisabled(false);
+            setDisableGetOtpButton(false);
           }, 120000); // 2 minutes in milliseconds
         }
         else{
@@ -67,7 +67,7 @@ const EmailVerification = () => {
         setDisableGetOtpButton(true);
         if (!token) {
           Toast.error("User not logged in");
-          navigation.navigate("SignIn");
+          navigation.navigate("Sign In");
           return;
         }
         try {
