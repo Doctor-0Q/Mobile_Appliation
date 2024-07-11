@@ -5,6 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Toast } from "toastify-react-native";
 import { showLocation } from "../../utils/functions";
 import API_URL from "../../config";
+import Loading from "../Loading";
 
 const Search = () => {
   const navigation = useNavigation();
@@ -14,12 +15,14 @@ const Search = () => {
   const [doctorId, setDoctorId] = useState();
   const [searchBy, setSearchBy] = useState("name");
   const [doctorData, setDoctorData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getDoctorNames = async () => {
     const response = await fetch(`${API_URL}/api/search/doctors`);
     const data = await response.json();
     data.sort((a, b) => a.name.localeCompare(b.name));
     setDoctors(data);
+    // setLoading(false);
   };
 
   const filterDoctorsByName = () => {
@@ -37,8 +40,14 @@ const Search = () => {
   useEffect(() => {
     if (search === "")
       setFilteredDoctors([]);
-    if (search !== "" && searchBy === "name")
-      filterDoctorsByName();
+    if (searchBy === "name") {
+      if (search === "") {
+        setFilteredDoctors(doctors.filter(doctor => doctor.name.toLowerCase()));
+      }
+      else
+        filterDoctorsByName();
+    }
+    // if (search !== "" && searchBy === "name")
   }, [search, doctors, searchBy]);
 
   const handleSearch = async (e) => {
@@ -65,6 +74,10 @@ const Search = () => {
     navigation.navigate('Doctorprofile', { doctorId: id });
   };
 
+  // if (loading) {
+  //   return <Loading />
+  // }
+
   return (
     <View className="mt-4 relative">
       <View className="flex-row justify-between items-center mx-4">
@@ -86,21 +99,24 @@ const Search = () => {
         </View>
       </View>
 
-      {searchBy === "name" && filteredDoctors.length > 0 && (
-        <FlatList
-          data={filteredDoctors}
-          keyExtractor={(item) => (item.id ? item.id.toString() : Math.random().toString())}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => handlePress(item.id)}
-              className="p-2 border-b border-gray-200"
-            >
-              <Text className="text-lg">{item.name}</Text>
-              <Text className="text-sm text-gray-600">{item.specializations}</Text>
-            </TouchableOpacity>
-          )}
-          className="absolute top-24 left-0 right-0 bg-white z-10"
-        />
+      {searchBy === "name" && (
+        loading ?
+          <Loading />
+          :
+          <FlatList
+            data={filteredDoctors}
+            keyExtractor={item => item.id.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() => handlePress(item.id)}
+                className="p-2 border-b border-gray-200"
+              >
+                <Text className="text-lg">{item.name}</Text>
+                <Text className="text-sm text-gray-600">{item.specializations}</Text>
+              </TouchableOpacity>
+            )}
+            className="absolute top-24 left-0 right-0 bg-white z-10"
+          />
       )}
 
 

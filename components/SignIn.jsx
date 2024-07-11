@@ -116,11 +116,8 @@ const SignUpScreen = () => {
       try {
         await AsyncStorage.removeItem("doc-qToken");
         await signOut(clientAuth);
-        navigation.navigate("Sign In");
       }
-      catch (e) {
-        console.log(e);
-      }
+      catch (e) { }
       setLoginButtonDisable(false);
       if (errorCode === 'auth/invalid-email' || errorCode === 'auth/missing-email')
         Toast.error("Invalid email address");
@@ -131,6 +128,8 @@ const SignUpScreen = () => {
       else if (errorCode === 'auth/user-not-found')
         Toast.error("User not found");
       else if (errorCode.includes('auth/requests-from-referer'))
+        Toast.error("Unauthorized access");
+      else if(errorCode === 'auth/requests-from-this-android-client-application-<empty>-are-blocked.')
         Toast.error("Unauthorized access");
       else
         Toast.error("An error occurred while logging in");
