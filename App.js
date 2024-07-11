@@ -21,6 +21,8 @@ import Doctorprofile from "./components/LandingPages/doctorprofile/Doctorprofile
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { signInWithCustomToken } from "firebase/auth";
 import Loading from "./components/Loading.jsx";
+import DoctorDetails from "./components/Details/DoctorDetails";
+import PatientDetails from "./components/Details/PatientDetails";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -107,7 +109,8 @@ const App = () => {
               <>
                 <NavigationContainer>
                   <Tab.Navigator>
-                    <Tab.Screen name="Details" component={ProfileSettings} />
+                    {isDoctor && <Tab.Screen name="DoctorDetails" component={DoctorDetails} />} 
+                    {!isDoctor && <Tab.Screen name="PatientDetails" component={PatientDetails} />}                   
                     <Tab.Screen name="LogOut" component={Logout} />
                   </Tab.Navigator>
                 </NavigationContainer>
