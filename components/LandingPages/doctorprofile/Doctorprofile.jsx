@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, TouchableOpacity, FlatList } from "react-native";
+import { View, Text, Image, TouchableOpacity, FlatList, ScrollView } from "react-native";
 import doctorpicture from "../../../assets/doctor/doctor-profile.png";
-import doctorprofile from "../../../assets/doctor/doctor profile pic.jpeg";
-// import DoctorAppointment from "./DoctorAppointment";
-import TimeSlotBooking from "./TimeSlotBooking";
+import DatePicker from "react-native-datepicker";
+import { tailwind } from "nativewind";
 import Animated, {
   interpolate,
   useAnimatedRef,
@@ -12,49 +11,136 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { Feather, FontAwesome } from "@expo/vector-icons";
 import { useRoute } from "@react-navigation/native";
 import API_URL from "../../../config";
-// import styles from "toastify-react-native/components/styles";
+import { Toast } from "toastify-react-native";
+import { useNavigation } from '@react-navigation/native';
+import { clientAuth } from "../../../utils/firebase";
+import ShowHeaderPage from "./ShowHeaderPage";
+import NotShowHeaderPage from "./NotShowHeaderPage";
+import Loading from "../../Loading";
 
+const timeSlots = [
+  { time: "10 - 11 AM", value: '10-11' },
+  { time: "11 - 12 PM", value: "11-12" },
+  { time: "12 - 01 PM", value: "12-1" },
+  { time: "01 - 02 PM", value: "1-2" },
+  { time: "02 - 03 PM", value: "2-3" },
+  { time: "03 - 04 PM", value: "3-4" },
+  { time: "04 - 05 PM", value: "4-5" },
+  { time: "05 - 06 PM", value: "5-6" },
+];
 
 const Doctorprofile = () => {
-  // const { item } = route.params; // Extracting item from navigation route
-  // if(!item){
-  //   return (
-  //     <View>no item</View>
-  //   )
-  // }
-  const scrollref = useAnimatedRef();
-  const scrollOffset = useScrollViewOffset(scrollref);
-  const [showHeader, setShowHeader] = useState(false);
-  const headerOpacity = useSharedValue(0);
-  const route=useRoute()
-  const {doctorId}=route.params;
-  const [docData,setDocData]=useState([]);
+  const route = useRoute();
+  const { doctorId } = route?.params || {};
+  if (!doctorId || doctorId === undefined || doctorId === null) {
+    return (
+      <View>
+        <Text>
+          No doctor is selected
+        </Text>
+      </View>
+    )
+  }
+  const [docData, setDocData] = useState([]);
+  const navigation = useNavigation();
+  const [x, setX] = useState(false);
+  // const today = new Date(new Date());
+  // today.setDate(today.getDate() + 3);
+  // const minDate = today.toISOString().split('T')[0];
+  // const [selectedDate, setSelectedDate] = useState('today');
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [slotdate, setSlotDate] = useState('today');
+  const [todaySlots, setTodaySlots] = useState({});
+  const [tomorrowSlots, setTomorrowSlots] = useState({});
+  const [loading, setLoading] = useState(true);
+
   const fetchDoctorProfile = async () => {
     try {
-      uid=doctorId;
-      console.log(uid);
-      const res = await fetch(`${API_URL}/api/doctor/profile/${uid}`);
+      setLoading(true);
+      const res = await fetch(`${API_URL}/api/doctor/profile/${doctorId}`);
       const datas = await res.json();
       console.log(datas);
       setDocData(datas);
+      setTodaySlots(datas.slots);
+      setTomorrowSlots(datas.tomorrowSlots);
       console.log(docData.name);
+      setLoading(false);
     } catch (error) {
-      toast.error("Error fetching doctor profile");
+      Toast.error("Error fetching doctor profile");
+      setLoading(false);
       return;
     }
   };
-  // useEffect(() => {
-  //   console.log("this",doctorId);
-  //   fetchDoctorProfile();
-  //   headerOpacity.value = withTiming(showHeader ? 1 : 0, { duration: 300 });
-    
-  // }, [showHeader]);
- useEffect(() => {
+
+  useEffect(() => {
     fetchDoctorProfile();
-  }, [doctorId]); 
+  }, [x, doctorId]);
+
+
+  const [showHeader, setShowHeader] = useState(false);
+  const scrollref = useAnimatedRef();
+  const scrollOffset = useScrollViewOffset(scrollref);
+  const headerOpacity = useSharedValue(0);
+
+  const headerAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: headerOpacity.value,
+      transform: [
+        {
+          translateY: interpolate(headerOpacity.value, [0, 1], [-50, 0]),
+        },
+      ],
+    };
+  });
+
+
+  const handleSlotDateSelect = (slot) => {
+    setSelectedSlot(null);
+    setSlotDate(slot);
+  };
+
+  const handleBookClick = async () => {
+    if (selectedSlot !== null) {
+      if (!clientAuth.currentUser) {
+        Toast.warn("Please login to book an appointment");
+        navigation.navigate("Sign In");
+        return;
+      }
+      try {
+        const data = {
+          date: slotdate,
+          docId: docData.uid,
+          time: selectedSlot,
+          uid: clientAuth.currentUser.uid
+        }
+        const response = await fetch(`${API_URL}/api/appointments`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+        const msg = await response.json();
+        if (!response.ok) {
+          Toast.error(msg);
+          return;
+        }
+        Toast.success("Booking successful!");
+        setSelectedSlot(null);
+        setX(!x);
+      }
+      catch (error) {
+        Toast.error("Server unavailable");
+        return;
+      }
+    } else {
+      Toast.warn("Please select a time slot before booking.");
+    }
+  };
+
+
   const imageAnimatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
@@ -72,197 +158,124 @@ const Doctorprofile = () => {
     };
   });
 
-  const headerAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: headerOpacity.value,
-      transform: [
-        {
-          translateY: interpolate(headerOpacity.value, [0, 1], [-50, 0]),
-        },
-      ],
-    };
-  });
-
   const handleScroll = (event) => {
     const offsetY = event.nativeEvent.contentOffset.y;
     setShowHeader(offsetY > 300);
   };
 
+
   return (
-    <View style={{ flex: 1, backgroundColor: "#003B2E80" }}>
-      <Animated.FlatList
-        ref={scrollref}
-        data={[{ key: "content" }]} // Using a single item to wrap your content
-        renderItem={() => (
-          <>
-            <Animated.Image
-              source={doctorpicture}
-              style={[{ height: 400, width: "100%" }, imageAnimatedStyle]}
-            />
-            <View
-              style={{
-                backgroundColor: "#fff",
-                padding: 20,
-                borderRadius: 30,
-                marginTop: -50,
-                minHeight: "100%",
-              }}
-            >
-              {showHeader && (
-                <Animated.View style={[headerAnimatedStyle]}>
-                  <View
-                    style={{
-                      alignItems: "center",
-                      justifyContent: "center",
-                      paddingVertical: 10,
-                    }}
-                  >
-                    <View
-                      style={{
-                        height: 100,
-                        width: 100,
-                        borderRadius: 50,
-                        overflow: "hidden",
-                      }}
-                    >
-                      <Image
-                        source={doctorprofile}
-                        resizeMode="cover"
-                        style={{ flex: 1, width: undefined, height: undefined }}
-                      />
-                    </View>
-                    <Text
-                      style={{
-                        fontSize: 20,
-                        fontWeight: "bold",
-                        color: "#fff",
-                      }}
-                    >
-                      {docData?.name}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 20,
-                        fontWeight: "bold",
-                        color: "#fff",
-                      }}
-                    >
-                      {docData?.name}
-                    </Text>
-                    <Text style={{ color: "#777777", marginTop: 5 }}>
-                      {/* ENT Surgeon */}
-                      {docData?.specializations}
-                    </Text>
+    <>
+      {/* {loading ? <Loading /> : */}
+        <View style={{ flex: 1, backgroundColor: "#003B2E80" }}>
+          <Animated.FlatList
+            ref={scrollref}
+            data={[{ key: "content" }]} // Using a single item to wrap your content
+            renderItem={() => (
+              <>
+                <Animated.Image
+                  source={doctorpicture}
+                  style={[{ height: 400, width: "100%" }, imageAnimatedStyle]}
+                />
+                <View
+                  style={{
+                    backgroundColor: "#fff",
+                    padding: 20,
+                    borderRadius: 30,
+                    marginTop: -50,
+                    minHeight: "100%",
+                  }}
+                >
+
+                  {/*  */}
+                  <View>
+                    {showHeader && (
+                      <Animated.View style={[headerAnimatedStyle]}>
+                        <ShowHeaderPage docData={docData} />
+                      </Animated.View>
+                    )}
+                    {!showHeader && (
+                      <NotShowHeaderPage docData={docData} />
+                    )}
                   </View>
-                </Animated.View>
-              )}
-              {!showHeader && (
-                <>
-                  <View
-                    style={{
-                      height: 1,
-                      width: 16,
-                      backgroundColor: "#000000",
-                      marginVertical: 10,
-                      borderRadius: 3,
-                    }}
-                  ></View>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 30,
-                        fontWeight: "bold",
-                        textAlign: "center",
-                      }}
+                  {/*  */}
+
+                  <View className="p-4">
+                    <View className="flex-row justify-between items-center mb-4">
+                      <TouchableOpacity className="p-2 border border-black rounded" onPress={() => handleSlotDateSelect('today')}>
+                        <Text className="text-lg">TODAY</Text>
+                        <Text className="text-green-500">{docData ? docData?.emptySlots?.today : 0} slots available</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity className="p-2 border border-black rounded" onPress={() => handleSlotDateSelect('tomorrow')}>
+                        <Text className="text-lg">TOMORROW</Text>
+                        <Text className="text-green-500">{docData ? docData?.emptySlots?.tomorrow : 0} slots available</Text>
+                      </TouchableOpacity>
+                      {/* <DatePicker
+          style={{ width: 200 }}
+          minDate={minDate}
+          mode="date"
+          placeholder="dd-mm-yyyy"
+          format="DD-MM-YYYY"
+          confirmBtnText="Confirm"
+          cancelBtnText="Cancel"
+          customStyles={{
+            dateIcon: {
+              position: "absolute",
+              right: 0,
+              top: 4,
+              marginLeft: 0,
+            },
+            dateInput: {
+              marginLeft: 36,
+            },
+          }}
+          onDateChange={(date) => {
+            setSlotDate(date);
+          }}
+        /> */}
+                    </View>
+                    {slotdate === 'today' && <ScrollView className="flex   border w-full ">
+                      {timeSlots.map((slot, index) => (
+                        <TouchableOpacity
+                          key={index}
+                          className={` m-2 border rounded w-[30%]  ${selectedSlot === slot.value ? "border-blue-700" : "border-gray-300"
+                            }`}
+                          onPress={() => setSelectedSlot(slot.value)}
+                          disabled={todaySlots ? (todaySlots[slot.value] === true ? false : true) : false}
+                        >
+                          <Text className="text-[20px] text-center">{slot.time}</Text>
+                        </TouchableOpacity>
+                      ))}
+                    </ScrollView>}
+                    {slotdate === 'tomorrow' && <ScrollView className="flex   border w-full ">
+                      {timeSlots.map((slot, index) => (
+                        <TouchableOpacity
+                          key={index}
+                          className={` m-2 border rounded w-[30%]  ${selectedSlot === slot.value ? "border-blue-700" : "border-gray-300"
+                            }`}
+                          onPress={() => setSelectedSlot(slot.value)}
+                          disabled={tomorrowSlots ? (tomorrowSlots[slot.value] === true ? false : true) : false}
+                        >
+                          <Text className="text-[20px] text-center">{slot.time}</Text>
+                        </TouchableOpacity>
+                      ))}
+                    </ScrollView>}
+                    <TouchableOpacity
+                      className="bg-blue-500 p-4 rounded mt-4"
+                      onPress={() => console.log("Booked slot:", selectedSlot)}
                     >
-                      {/* {item.Name} */}
-                      {docData?.name}
-                      {'\n'}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 20,
-                        fontWeight: "bold",
-                        // textAlign: "flex-end", 
-                      }}
-                    >
-                      {/* {item.Name} */}
-                      {docData?.city}
-                      
-                    </Text>
-                    <TouchableOpacity>
-                      <Feather name="bookmark" size={24} color="#000" />
+                      <Text className="text-white text-center text-lg" onPress={handleBookClick}>Book</Text>
                     </TouchableOpacity>
                   </View>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      color: "#777777",
-                      marginVertical: 10,
-                    }}
-                  >
-                    {docData?.specializations}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      textAlign: "left",
-                      marginVertical: 10,
-                    }}
-                  >
-                    Dr.   {docData?.name}, is a distinguished ENT surgeon renowned for
-                    her expertise in diagnosing and treating conditions
-                    affecting the ear, nose, and throat. With a passion for
-                    improving patients' quality of life, Dr.{docData?.name}{" "}
-                    combines compassion with cutting-edge medical knowledge to
-                    provide comprehensive care.
-                  </Text>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      marginVertical: 5,
-                    }}
-                  >
-                    <FontAwesome name="star" size={20} color="#FFD700" />
-                    <FontAwesome name="star" size={20} color="#FFD700" />
-                    <FontAwesome name="star" size={20} color="#FFD700" />
-                    <FontAwesome name="star" size={20} color="#FFD700" />
-                    <FontAwesome name="star" size={20} color="#3F3E3C" />
-                    <Text style={{ fontSize: 18, marginLeft: 5 }}>4.66</Text>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      marginVertical: 5,
-                    }}
-                  >
-                    <Feather name="clock" size={16} color="#7B7B7B" />
-                    <Text style={{ color: "#7B7B7B", marginLeft: 5 }}>
-                      04:00 PM - 08:00 PM
-                    </Text>
-                  </View>
-                </>
-              )}
-              <View>
-                <TimeSlotBooking />
-              </View>
-            </View>
-          </>
-        )}
-        // keyExtractor={(docData) => docData.key}
-        // {docData?.name}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-      />
-    </View>
+                </View>
+              </>
+            )}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
+          />
+        </View>
+      {/* } */}
+    </>
   );
 };
 

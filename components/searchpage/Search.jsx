@@ -185,7 +185,7 @@ const Search = () => {
     const data = await response.json();
     data.sort((a, b) => a.name.localeCompare(b.name));
     setDoctors(data);
-    // setLoading(false);
+    setLoading(false);
   };
 
   const filterDoctorsByName = () => {
