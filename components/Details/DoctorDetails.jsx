@@ -21,6 +21,7 @@ import API_URL from '../../config';
 import { Toast } from 'toastify-react-native';
 import { useNavigation } from "@react-navigation/native";
 import { clientAuth } from '../../utils/firebase';
+import Logout, { handleLogout } from '../Logout';
 
 const DoctorDetails = () => {
   const navigation = useNavigation();
@@ -38,10 +39,6 @@ const DoctorDetails = () => {
 
   const handleChange = (name, value) => {
     setValues({ ...values, [name]: value });
-  };
-
-  const handleLogout = () => {
-    // navigation.navigate("Sign In");
   };
 
   const handleDocSignup = async () => {
@@ -63,7 +60,6 @@ const DoctorDetails = () => {
       }
       Toast.success(datas);
       await clientAuth.currentUser.getIdToken(true);
-      setTimeout(() => { window.location.reload(); }, 1000);
     } catch (error) {
       Toast.error("Network unavailable! Try again");
       return;
