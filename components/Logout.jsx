@@ -25,16 +25,6 @@ function Logout() {
         });
     }, []);
 
-    // const handleLogout = async () => {
-    //     await AsyncStorage.removeItem("doc-qToken");
-    //     await signOut(clientAuth)
-    //     .then(async () => {
-    //         console.log("User Signed Out");
-    //     })
-    //     .catch((error) => {
-    //         console.log(error);
-    //     });
-    // }
     return (
         <View className="p-8  bg-white rounded-t-3xl">
             <View classname="flex-row justify-center items-center mb-4">

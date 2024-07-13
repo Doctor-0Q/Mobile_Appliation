@@ -10,6 +10,7 @@ import {
     Ionicons,
     MaterialCommunityIcons
 } from "@expo/vector-icons";
+import { handleLogout } from '../Logout';
 
 const ProfileScreen = () => {
     return (
@@ -44,7 +45,9 @@ const ProfileScreen = () => {
                 <MenuItem imageSource={require("../../assets/ProfileSettings/setting-2.png")} text="Settings" />
                 <MenuItem imageSource={require("../../assets/ProfileSettings/message-question.png")} text="Help and Support" />
                 <MenuItem imageSource={require("../../assets/ProfileSettings/security-safe.png")} text="Terms and Conditions" />
+                <TouchableOpacity onPress={handleLogout}>
                 <MenuItem imageSource={require("../../assets/ProfileSettings/logout.png")} text="Log Out" />
+                </TouchableOpacity>
             </View>
         </ScrollView>
     );

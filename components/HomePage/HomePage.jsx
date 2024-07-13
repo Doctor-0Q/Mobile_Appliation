@@ -20,6 +20,7 @@ import Pill from "../../assets/Homepage/Pill.png";
 import { showLocation } from "../../utils/functions";
 import { Toast } from "toastify-react-native";
 import { useNavigation } from '@react-navigation/native';
+import { clientAuth } from "../../utils/firebase";
 
 
 const HomePage = () => {
@@ -49,8 +50,8 @@ const HomePage = () => {
             <View className="flex-row items-center">
               <Image source={docimg} className="w-12 h-12 rounded-full" />
               <View className="ml-3">
-                <Text className="text-lg font-semibold">Welcome Back</Text>
-                <Text className="text-lg">Andrew Smith</Text>
+                <Text className="text-lg font-semibold">Welcome</Text>
+                <Text className="text-lg">{clientAuth?.currentUser?.displayName || "User"}</Text>
               </View>
             </View>
             <TouchableOpacity>

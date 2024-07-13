@@ -161,9 +161,9 @@
 
 
 import { View, Text, TextInput, TouchableOpacity, FlatList, Image } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { Toast } from "toastify-react-native";
 import { showLocation } from "../../utils/functions";
 import API_URL from "../../config";
@@ -179,6 +179,8 @@ const Search = () => {
   const [searchBy, setSearchBy] = useState("name");
   const [doctorData, setDoctorData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const inputRef = useRef(null);
+  const isFocused = useIsFocused();
 
   const getDoctorNames = async () => {
     const response = await fetch(`${API_URL}/api/search/doctors`);
@@ -199,6 +201,12 @@ const Search = () => {
   useEffect(() => {
     getDoctorNames();
   }, []);
+
+  useEffect(() => {
+    if (isFocused) {
+      inputRef.current?.focus();
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     if (search === "")
@@ -272,6 +280,7 @@ const Search = () => {
           placeholder={`Search by ${searchBy}...`}
           className="p-2 px-4 flex-1 rounded-lg text-[#004D6C] bg-[#ffffff] border-none outline-none"
           value={search}
+          ref={inputRef}
           onChangeText={text => setSearch(text)}
           onSubmitEditing={handleSearch}
         />
