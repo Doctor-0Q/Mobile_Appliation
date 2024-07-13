@@ -6,6 +6,7 @@ import { tailwind } from "nativewind";
 import Animated, {
   interpolate,
   useAnimatedRef,
+  useAnimatedScrollHandler,
   useAnimatedStyle,
   useScrollViewOffset,
   useSharedValue,
@@ -113,7 +114,7 @@ const Doctorprofile = () => {
           date: slotdate,
           docId: docData.uid,
           time: selectedSlot,
-          uid: clientAuth.currentUser.uid
+          token: await clientAuth.currentUser.getIdToken()
         }
         const response = await fetch(`${API_URL}/api/appointments`, {
           method: 'POST',
@@ -158,15 +159,27 @@ const Doctorprofile = () => {
     };
   });
 
-  const handleScroll = (event) => {
+  const handleScroll = ((event) => {
     const offsetY = event.nativeEvent.contentOffset.y;
     setShowHeader(offsetY > 300);
-  };
+    if (offsetY > 300) {
+      setShowHeader(true);
+    } else {
+      setShowHeader(false);
+    }
+  });
 
 
   return (
     <>
-      {/* {loading ? <Loading /> : */}
+      {/* {loading && (
+        <View>
+          <Text>
+            Loading...
+          </Text>
+        </View>
+      )} */}
+      {/* {!loading && */}
         <View style={{ flex: 1, backgroundColor: "#003B2E80" }}>
           <Animated.FlatList
             ref={scrollref}
@@ -202,11 +215,11 @@ const Doctorprofile = () => {
 
                   <View className="p-4">
                     <View className="flex-row justify-between items-center mb-4">
-                      <TouchableOpacity className="p-2 border border-black rounded" onPress={() => handleSlotDateSelect('today')}>
+                      <TouchableOpacity className={`p-2 border rounded ${slotdate === 'today' ? "border-blue-700" : "border-black"}`} onPress={() => handleSlotDateSelect('today')}>
                         <Text className="text-lg">TODAY</Text>
                         <Text className="text-green-500">{docData ? docData?.emptySlots?.today : 0} slots available</Text>
                       </TouchableOpacity>
-                      <TouchableOpacity className="p-2 border border-black rounded" onPress={() => handleSlotDateSelect('tomorrow')}>
+                      <TouchableOpacity className={`p-2 border rounded ${slotdate === 'tomorrow' ? "border-blue-700" : "border-black"}`} onPress={() => handleSlotDateSelect('tomorrow')}>
                         <Text className="text-lg">TOMORROW</Text>
                         <Text className="text-green-500">{docData ? docData?.emptySlots?.tomorrow : 0} slots available</Text>
                       </TouchableOpacity>

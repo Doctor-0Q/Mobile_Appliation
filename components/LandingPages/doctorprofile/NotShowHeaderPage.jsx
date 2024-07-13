@@ -63,14 +63,14 @@ function NotShowHeaderPage({ docData }) {
                     marginVertical: 10,
                 }}
             >
-                Dr.   {docData?.name}, is a distinguished ENT surgeon renowned for
+                {docData?.name}, is a distinguished ENT surgeon renowned for
                 her expertise in diagnosing and treating conditions
                 affecting the ear, nose, and throat. With a passion for
-                improving patients' quality of life, Dr.{docData?.name}{" "}
+                improving patients' quality of life, {docData?.name}{" "}
                 combines compassion with cutting-edge medical knowledge to
                 provide comprehensive care.
             </Text>
-            <View
+            {/* <View
                 style={{
                     flexDirection: "row",
                     alignItems: "center",
@@ -83,7 +83,7 @@ function NotShowHeaderPage({ docData }) {
                 <FontAwesome name="star" size={20} color="#FFD700" />
                 <FontAwesome name="star" size={20} color="#3F3E3C" />
                 <Text style={{ fontSize: 18, marginLeft: 5 }}>4.66</Text>
-            </View>
+            </View> */}
             <View
                 style={{
                     flexDirection: "row",
@@ -93,7 +93,7 @@ function NotShowHeaderPage({ docData }) {
             >
                 <Feather name="clock" size={16} color="#7B7B7B" />
                 <Text style={{ color: "#7B7B7B", marginLeft: 5 }}>
-                    04:00 PM - 08:00 PM
+                    09:00 PM - 08:00 PM
                 </Text>
             </View>
         </>

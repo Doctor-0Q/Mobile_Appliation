@@ -45,8 +45,8 @@ const App = () => {
     }
 
     clientAuth.onAuthStateChanged(async (user) => {
+      setLoading(true);
       if (user) {
-        setLoading(true);
         const claims = (await user.getIdTokenResult()).claims;
         console.log(claims);
         setEmailVerified(claims?.email_verified);
@@ -65,8 +65,8 @@ const App = () => {
     });
 
     clientAuth.onIdTokenChanged(async (user) => {
+      setLoading(true);
       if (user) {
-        setLoading(true);
         const claims = (await user.getIdTokenResult()).claims;
         setEmailVerified(claims?.email_verified);
         setUserInfo(claims?.info);
@@ -138,8 +138,6 @@ const App = () => {
                                     iconName = focused ? 'notifications' : 'notifications-outline';
                                   } else if (route.name === 'Profile' || route.name === 'Sign In') {
                                     iconName = focused ? 'person' : 'person-outline';
-                                  } else if (route.name === 'location') {
-                                    iconName = focused ? 'location' : 'location-outline';
                                   }
 
                                   return (
@@ -163,7 +161,6 @@ const App = () => {
                             >
                               <Tab.Screen name="Home" component={HomePage} />
                               <Tab.Screen name="Search" component={Search} />
-                              <Tab.Screen name="location" component={logo} />
                               <Tab.Screen name="Notifications" component={onboarding} />
                               <Tab.Screen name="Doctorprofile" component={Doctorprofile}
                               />

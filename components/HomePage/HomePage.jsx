@@ -7,7 +7,6 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-// import { className= } from "nativewind";
 import docimg from "../../assets/Homepage/Pic.png";
 import clinic from "../../assets/Homepage/clinic.png";
 import doc from "../../assets/Homepage/doc.png";
@@ -17,30 +16,12 @@ import stethoscope from "../../assets/Homepage/Stethoscope.png";
 import heart from "../../assets/Homepage/heart.png";
 import handHeart from "../../assets/Homepage/HandHeart.png";
 import Pill from "../../assets/Homepage/Pill.png";
-import { showLocation } from "../../utils/functions";
-import { Toast } from "toastify-react-native";
 import { useNavigation } from '@react-navigation/native';
 import { clientAuth } from "../../utils/firebase";
-
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const HomePage = () => {
   const navigation = useNavigation();
-  const [search, setSearch] = useState("");
-  
-  const handleSearch = async (e) => {
-    e.preventDefault();
-
-    if (!search || search === "") {
-      Toast.warn("Please enter a valid query!");
-      return;
-    }
-    console.log(search);
-    const data = await showLocation(null, search, null);
-    if (data) {
-      navigation.navigate("Home")
-    }
-    console.log("Done");
-  }
   return (
     <>
       {
@@ -48,7 +29,8 @@ const HomePage = () => {
           {/* Header */}
           <View className="flex-row items-center justify-between">
             <View className="flex-row items-center">
-              <Image source={docimg} className="w-12 h-12 rounded-full" />
+              {/* <Image source={docimg} className="w-12 h-12 rounded-full" /> */}
+              <Icon name={"person-outline"} size={35} />
               <View className="ml-3">
                 <Text className="text-lg font-semibold">Welcome</Text>
                 <Text className="text-lg">{clientAuth?.currentUser?.displayName || "User"}</Text>
@@ -67,9 +49,7 @@ const HomePage = () => {
             <TextInput
               placeholder="Search doctor..."
               className="border p-2 rounded-lg text-gray-700 bg-[#F3F4F6] border-none outline-none"
-              value={search}
-              onChangeText={text => setSearch(text)}
-              onSubmitEditing={handleSearch}
+              onPress={() => navigation.navigate("Search")}
             />
           </View>
 
