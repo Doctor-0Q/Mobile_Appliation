@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, TouchableOpacity, FlatList, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  FlatList,
+  ScrollView,
+} from "react-native";
 import doctorpicture from "../../../assets/doctor/doctor-profile.png";
-import DatePicker from "react-native-datepicker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { tailwind } from "nativewind";
 import Animated, {
   interpolate,
@@ -15,14 +22,15 @@ import Animated, {
 import { useRoute } from "@react-navigation/native";
 import API_URL from "../../../config";
 import { Toast } from "toastify-react-native";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 import { clientAuth } from "../../../utils/firebase";
 import ShowHeaderPage from "./ShowHeaderPage";
 import NotShowHeaderPage from "./NotShowHeaderPage";
 import Loading from "../../Loading";
-
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import EvilIcons from "@expo/vector-icons/EvilIcons";
 const timeSlots = [
-  { time: "10 - 11 AM", value: '10-11' },
+  { time: "10 - 11 AM", value: "10-11" },
   { time: "11 - 12 PM", value: "11-12" },
   { time: "12 - 01 PM", value: "12-1" },
   { time: "01 - 02 PM", value: "1-2" },
@@ -38,11 +46,9 @@ const Doctorprofile = () => {
   if (!doctorId || doctorId === undefined || doctorId === null) {
     return (
       <View>
-        <Text>
-          No doctor is selected
-        </Text>
+        <Text>No doctor is selected</Text>
       </View>
-    )
+    );
   }
   const [docData, setDocData] = useState([]);
   const navigation = useNavigation();
@@ -52,10 +58,13 @@ const Doctorprofile = () => {
   // const minDate = today.toISOString().split('T')[0];
   // const [selectedDate, setSelectedDate] = useState('today');
   const [selectedSlot, setSelectedSlot] = useState(null);
-  const [slotdate, setSlotDate] = useState('today');
+  const [slotdate, setSlotDate] = useState("today");
   const [todaySlots, setTodaySlots] = useState({});
   const [tomorrowSlots, setTomorrowSlots] = useState({});
   const [loading, setLoading] = useState(true);
+  const [date, setDate] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [currentDate, setCurrentDate] = useState("");
 
   const fetchDoctorProfile = async () => {
     try {
@@ -77,8 +86,10 @@ const Doctorprofile = () => {
 
   useEffect(() => {
     fetchDoctorProfile();
+    const date = new Date();
+    const formattedDate = date.toLocaleDateString();
+    setCurrentDate(formattedDate);
   }, [x, doctorId]);
-
 
   const [showHeader, setShowHeader] = useState(false);
   const scrollref = useAnimatedRef();
@@ -95,7 +106,6 @@ const Doctorprofile = () => {
       ],
     };
   });
-
 
   const handleSlotDateSelect = (slot) => {
     setSelectedSlot(null);
@@ -114,14 +124,14 @@ const Doctorprofile = () => {
           date: slotdate,
           docId: docData.uid,
           time: selectedSlot,
-          token: await clientAuth.currentUser.getIdToken()
-        }
+          token: await clientAuth.currentUser.getIdToken(),
+        };
         const response = await fetch(`${API_URL}/api/appointments`, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(data)
+          body: JSON.stringify(data),
         });
         const msg = await response.json();
         if (!response.ok) {
@@ -131,8 +141,7 @@ const Doctorprofile = () => {
         Toast.success("Booking successful!");
         setSelectedSlot(null);
         setX(!x);
-      }
-      catch (error) {
+      } catch (error) {
         Toast.error("Server unavailable");
         return;
       }
@@ -140,7 +149,6 @@ const Doctorprofile = () => {
       Toast.warn("Please select a time slot before booking.");
     }
   };
-
 
   const imageAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -159,7 +167,7 @@ const Doctorprofile = () => {
     };
   });
 
-  const handleScroll = ((event) => {
+  const handleScroll = (event) => {
     const offsetY = event.nativeEvent.contentOffset.y;
     setShowHeader(offsetY > 300);
     if (offsetY > 300) {
@@ -167,9 +175,14 @@ const Doctorprofile = () => {
     } else {
       setShowHeader(false);
     }
-  });
-
-
+  };
+  const handleDateChange = (event, selectedDate) => {
+    if (event.type === "set") {
+      const date = selectedDate || date;
+      // setCurrentDate(date);
+    }
+    setShowModal(false);
+  };
   return (
     <>
       {/* {loading && (
@@ -180,113 +193,182 @@ const Doctorprofile = () => {
         </View>
       )} */}
       {/* {!loading && */}
-        <View style={{ flex: 1, backgroundColor: "#003B2E80" }}>
-          <Animated.FlatList
-            ref={scrollref}
-            data={[{ key: "content" }]} // Using a single item to wrap your content
-            renderItem={() => (
-              <>
-                <Animated.Image
-                  source={doctorpicture}
-                  style={[{ height: 400, width: "100%" }, imageAnimatedStyle]}
-                />
-                <View
-                  style={{
-                    backgroundColor: "#fff",
-                    padding: 20,
-                    borderRadius: 30,
-                    marginTop: -50,
-                    minHeight: "100%",
-                  }}
-                >
-
-                  {/*  */}
-                  <View>
-                    {showHeader && (
-                      <Animated.View style={[headerAnimatedStyle]}>
-                        <ShowHeaderPage docData={docData} />
-                      </Animated.View>
-                    )}
-                    {!showHeader && (
-                      <NotShowHeaderPage docData={docData} />
-                    )}
-                  </View>
-                  {/*  */}
-
-                  <View className="p-4">
-                    <View className="flex-row justify-between items-center mb-4">
-                      <TouchableOpacity className={`p-2 border rounded ${slotdate === 'today' ? "border-blue-700" : "border-black"}`} onPress={() => handleSlotDateSelect('today')}>
-                        <Text className="text-lg">TODAY</Text>
-                        <Text className="text-green-500">{docData ? docData?.emptySlots?.today : 0} slots available</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity className={`p-2 border rounded ${slotdate === 'tomorrow' ? "border-blue-700" : "border-black"}`} onPress={() => handleSlotDateSelect('tomorrow')}>
-                        <Text className="text-lg">TOMORROW</Text>
-                        <Text className="text-green-500">{docData ? docData?.emptySlots?.tomorrow : 0} slots available</Text>
-                      </TouchableOpacity>
-                      {/* <DatePicker
-          style={{ width: 200 }}
-          minDate={minDate}
-          mode="date"
-          placeholder="dd-mm-yyyy"
-          format="DD-MM-YYYY"
-          confirmBtnText="Confirm"
-          cancelBtnText="Cancel"
-          customStyles={{
-            dateIcon: {
-              position: "absolute",
-              right: 0,
-              top: 4,
-              marginLeft: 0,
-            },
-            dateInput: {
-              marginLeft: 36,
-            },
-          }}
-          onDateChange={(date) => {
-            setSlotDate(date);
-          }}
-        /> */}
-                    </View>
-                    {slotdate === 'today' && <ScrollView className="flex   border w-full ">
-                      {timeSlots.map((slot, index) => (
-                        <TouchableOpacity
-                          key={index}
-                          className={` m-2 border rounded w-[30%]  ${selectedSlot === slot.value ? "border-blue-700" : "border-gray-300"
-                            }`}
-                          onPress={() => setSelectedSlot(slot.value)}
-                          disabled={todaySlots ? (todaySlots[slot.value] === true ? false : true) : false}
-                        >
-                          <Text className="text-[20px] text-center">{slot.time}</Text>
-                        </TouchableOpacity>
-                      ))}
-                    </ScrollView>}
-                    {slotdate === 'tomorrow' && <ScrollView className="flex   border w-full ">
-                      {timeSlots.map((slot, index) => (
-                        <TouchableOpacity
-                          key={index}
-                          className={` m-2 border rounded w-[30%]  ${selectedSlot === slot.value ? "border-blue-700" : "border-gray-300"
-                            }`}
-                          onPress={() => setSelectedSlot(slot.value)}
-                          disabled={tomorrowSlots ? (tomorrowSlots[slot.value] === true ? false : true) : false}
-                        >
-                          <Text className="text-[20px] text-center">{slot.time}</Text>
-                        </TouchableOpacity>
-                      ))}
-                    </ScrollView>}
-                    <TouchableOpacity
-                      className="bg-blue-500 p-4 rounded mt-4"
-                      onPress={() => console.log("Booked slot:", selectedSlot)}
-                    >
-                      <Text className="text-white text-center text-lg" onPress={handleBookClick}>Book</Text>
-                    </TouchableOpacity>
-                  </View>
+      <View style={{ flex: 1, backgroundColor: "#003B2E80" }}>
+        <Animated.FlatList
+          ref={scrollref}
+          data={[{ key: "content" }]} // Using a single item to wrap your content
+          renderItem={() => (
+            <>
+              <Animated.Image
+                source={doctorpicture}
+                style={[{ height: 400, width: "100%" }, imageAnimatedStyle]}
+              />
+              <View
+                style={{
+                  backgroundColor: "#fff",
+                  padding: 20,
+                  borderRadius: 30,
+                  marginTop: -50,
+                  minHeight: "100%",
+                }}
+              >
+                {/*  */}
+                <View>
+                  {showHeader && (
+                    <Animated.View style={[headerAnimatedStyle]}>
+                      <ShowHeaderPage docData={docData} />
+                    </Animated.View>
+                  )}
+                  {!showHeader && <NotShowHeaderPage docData={docData} />}
                 </View>
-              </>
-            )}
-            onScroll={handleScroll}
-            scrollEventThrottle={16}
-          />
-        </View>
+                {/*  */}
+
+                <View className="p-4">
+                  <View className="flex-row justify-between items-center mb-4">
+                    <TouchableOpacity
+                      className={`p-2 border rounded ${
+                        slotdate === "today"
+                          ? "border-blue-700"
+                          : "border-black"
+                      }`}
+                      onPress={() => handleSlotDateSelect("today")}
+                    >
+                      <Text className="text-lg">TODAY</Text>
+                      <Text className="text-green-500">
+                        {docData ? docData?.emptySlots?.today : 0} slots
+                        available
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      className={`p-2 border rounded ${
+                        slotdate === "tomorrow"
+                          ? "border-blue-700"
+                          : "border-black"
+                      }`}
+                      onPress={() => handleSlotDateSelect("tomorrow")}
+                    >
+                      <Text className="text-lg">TOMORROW</Text>
+                      <Text className="text-green-500">
+                        {docData ? docData?.emptySlots?.tomorrow : 0} slots
+                        available
+                      </Text>
+                    </TouchableOpacity>
+                    {/* <DatePicker
+                      style={{ width: 200 }}
+                      minDate={minDate}
+                      mode="date"
+                      placeholder="dd-mm-yyyy"
+                      format="DD-MM-YYYY"
+                      confirmBtnText="Confirm"
+                      cancelBtnText="Cancel"
+                      customStyles={{
+                        dateIcon: {
+                          position: "absolute",
+                          right: 0,
+                          top: 4,
+                          marginLeft: 0,
+                        },
+                        dateInput: {
+                          marginLeft: 36,
+                        },
+                      }}
+                      onDateChange={(date) => {
+                        setSlotDate(date);
+                      }}
+                    /> */}
+                    <TouchableOpacity onPress={() => setShowModal(true)}>
+                      <View>
+                        <FontAwesome
+                          name="calendar"
+                          className="text-[15px]"
+                          size={28}
+                        />
+                        {/* <Text>{currentDate}</Text> */}
+                      </View>
+                    </TouchableOpacity>
+                    {showModal && (
+                      <DateTimePicker
+                        onChange={handleDateChange}
+                        mode="date"
+                        value={date || new Date()}
+                      />
+                    )}
+                  </View>
+                  {slotdate === "today" && (
+                    <ScrollView className="flex    border w-full  ">
+                      <View className="flex flex-row flex-wrap h-full pl-3 ">
+                        {timeSlots.map((slot, index) => (
+                          <TouchableOpacity
+                            key={index}
+                            className={` m-2 border rounded w-[40%] flex p-3 text-[#2F80EDBF]    ${
+                              selectedSlot === slot.value
+                                ? "border-blue-700"
+                                : "border-gray-300"
+                            }`}
+                            onPress={() => setSelectedSlot(slot.value)}
+                            disabled={
+                              todaySlots
+                                ? todaySlots[slot.value] === true
+                                  ? false
+                                  : true
+                                : false
+                            }
+                          >
+                            <Text className="text-[17px] text-center text-[#2F80EDBF] ">
+                              {slot.time}
+                            </Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    </ScrollView>
+                  )}
+                  {slotdate === "tomorrow" && (
+                    <ScrollView className="flex   border w-full ">
+                      <View className="flex flex-row flex-wrap h-full pl-3 ">
+                        {timeSlots.map((slot, index) => (
+                          <TouchableOpacity
+                            key={index}
+                            className={` m-2 border rounded w-[40%] flex p-3 text-[#2F80EDBF]   ${
+                              selectedSlot === slot.value
+                                ? "border-blue-700"
+                                : "border-gray-300"
+                            }`}
+                            onPress={() => setSelectedSlot(slot.value)}
+                            disabled={
+                              tomorrowSlots
+                                ? tomorrowSlots[slot.value] === true
+                                  ? false
+                                  : true
+                                : false
+                            }
+                          >
+                            <Text className="text-[17px] text-center text-[#2F80EDBF]">
+                              {slot.time}
+                            </Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    </ScrollView>
+                  )}
+                  <TouchableOpacity
+                    className="bg-blue-500 p-4 rounded mt-4"
+                    onPress={() => console.log("Booked slot:", selectedSlot)}
+                  >
+                    <Text
+                      className="text-white text-center text-lg"
+                      onPress={handleBookClick}
+                    >
+                      Book
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </>
+          )}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+        />
+      </View>
       {/* } */}
     </>
   );
