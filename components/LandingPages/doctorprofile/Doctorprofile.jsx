@@ -40,9 +40,21 @@ const timeSlots = [
   { time: "05 - 06 PM", value: "5-6" },
 ];
 
+function formatDate(date) {
+  if(date === "today") {
+    return new Date();
+  }
+  if(date === "tomorrow") {
+    const today = new Date(new Date());
+    today.setDate(today.getDate() + 1);
+    return today;
+  }
+}
+
 const Doctorprofile = () => {
   const route = useRoute();
   const { doctorId } = route?.params || {};
+
   if (!doctorId || doctorId === undefined || doctorId === null) {
     return (
       <View>
@@ -50,21 +62,19 @@ const Doctorprofile = () => {
       </View>
     );
   }
+
   const [docData, setDocData] = useState([]);
   const navigation = useNavigation();
   const [x, setX] = useState(false);
-  // const today = new Date(new Date());
-  // today.setDate(today.getDate() + 3);
+  const today = new Date(new Date());
+  today.setDate(today.getDate() + 2);
   // const minDate = today.toISOString().split('T')[0];
-  // const [selectedDate, setSelectedDate] = useState('today');
   const [selectedSlot, setSelectedSlot] = useState(null);
-  const [slotdate, setSlotDate] = useState("today");
+  const [selectedDate, setSelectedDate] = useState("today");
   const [todaySlots, setTodaySlots] = useState({});
   const [tomorrowSlots, setTomorrowSlots] = useState({});
   const [loading, setLoading] = useState(true);
-  const [date, setDate] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [currentDate, setCurrentDate] = useState("");
 
   const fetchDoctorProfile = async () => {
     try {
@@ -86,9 +96,6 @@ const Doctorprofile = () => {
 
   useEffect(() => {
     fetchDoctorProfile();
-    const date = new Date();
-    const formattedDate = date.toLocaleDateString();
-    setCurrentDate(formattedDate);
   }, [x, doctorId]);
 
   const [showHeader, setShowHeader] = useState(false);
@@ -109,19 +116,20 @@ const Doctorprofile = () => {
 
   const handleSlotDateSelect = (slot) => {
     setSelectedSlot(null);
-    setSlotDate(slot);
+    setSelectedDate(slot);
   };
 
   const handleBookClick = async () => {
+    if (!clientAuth.currentUser) {
+      Toast.warn("Please login to book an appointment");
+      navigation.navigate("Sign In");
+      return;
+    }
+
     if (selectedSlot !== null) {
-      if (!clientAuth.currentUser) {
-        Toast.warn("Please login to book an appointment");
-        navigation.navigate("Sign In");
-        return;
-      }
       try {
         const data = {
-          date: slotdate,
+          date: selectedDate,
           docId: docData.uid,
           time: selectedSlot,
           token: await clientAuth.currentUser.getIdToken(),
@@ -179,7 +187,7 @@ const Doctorprofile = () => {
   const handleDateChange = (event, selectedDate) => {
     if (event.type === "set") {
       const date = selectedDate || date;
-      // setCurrentDate(date);
+      setSelectedDate(date);
     }
     setShowModal(false);
   };
@@ -227,7 +235,7 @@ const Doctorprofile = () => {
                   <View className="flex-row justify-between items-center mb-4">
                     <TouchableOpacity
                       className={`p-2 border rounded ${
-                        slotdate === "today"
+                        selectedDate === "today"
                           ? "border-blue-700"
                           : "border-black"
                       }`}
@@ -241,7 +249,7 @@ const Doctorprofile = () => {
                     </TouchableOpacity>
                     <TouchableOpacity
                       className={`p-2 border rounded ${
-                        slotdate === "tomorrow"
+                        selectedDate === "tomorrow"
                           ? "border-blue-700"
                           : "border-black"
                       }`}
@@ -253,29 +261,6 @@ const Doctorprofile = () => {
                         available
                       </Text>
                     </TouchableOpacity>
-                    {/* <DatePicker
-                      style={{ width: 200 }}
-                      minDate={minDate}
-                      mode="date"
-                      placeholder="dd-mm-yyyy"
-                      format="DD-MM-YYYY"
-                      confirmBtnText="Confirm"
-                      cancelBtnText="Cancel"
-                      customStyles={{
-                        dateIcon: {
-                          position: "absolute",
-                          right: 0,
-                          top: 4,
-                          marginLeft: 0,
-                        },
-                        dateInput: {
-                          marginLeft: 36,
-                        },
-                      }}
-                      onDateChange={(date) => {
-                        setSlotDate(date);
-                      }}
-                    /> */}
                     <TouchableOpacity onPress={() => setShowModal(true)}>
                       <View>
                         <FontAwesome
@@ -283,18 +268,18 @@ const Doctorprofile = () => {
                           className="text-[15px]"
                           size={28}
                         />
-                        {/* <Text>{currentDate}</Text> */}
                       </View>
                     </TouchableOpacity>
                     {showModal && (
                       <DateTimePicker
                         onChange={handleDateChange}
                         mode="date"
-                        value={date || new Date()}
+                        minimumDate={today}
+                        value={formatDate(selectedDate) || new Date()}
                       />
                     )}
                   </View>
-                  {slotdate === "today" && (
+                  {selectedDate === "today" && (
                     <ScrollView className="flex    border w-full  ">
                       <View className="flex flex-row flex-wrap h-full pl-3 ">
                         {timeSlots.map((slot, index) => (
@@ -322,7 +307,7 @@ const Doctorprofile = () => {
                       </View>
                     </ScrollView>
                   )}
-                  {slotdate === "tomorrow" && (
+                  {selectedDate === "tomorrow" && (
                     <ScrollView className="flex   border w-full ">
                       <View className="flex flex-row flex-wrap h-full pl-3 ">
                         {timeSlots.map((slot, index) => (
@@ -352,8 +337,8 @@ const Doctorprofile = () => {
                   )}
                   <TouchableOpacity
                     className="bg-blue-500 p-4 rounded mt-4"
-                    onPress={() => console.log("Booked slot:", selectedSlot)}
-                  >
+                    onPress={handleBookClick}
+                    >
                     <Text
                       className="text-white text-center text-lg"
                       onPress={handleBookClick}
