@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import doctorpicture from "../../../assets/doctor/doctor-profile.png";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -29,6 +30,7 @@ import NotShowHeaderPage from "./NotShowHeaderPage";
 import Loading from "../../Loading";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
+import axios from "axios";
 const timeSlots = [
   { time: "10 - 11 AM", value: "10-11" },
   { time: "11 - 12 PM", value: "11-12" },
@@ -41,14 +43,15 @@ const timeSlots = [
 ];
 
 function formatDate(date) {
-  if(date === "today") {
+  if (date === "today") {
     return new Date();
   }
-  if(date === "tomorrow") {
+  if (date === "tomorrow") {
     const today = new Date(new Date());
     today.setDate(today.getDate() + 1);
     return today;
   }
+  return date;
 }
 
 const Doctorprofile = () => {
@@ -62,6 +65,7 @@ const Doctorprofile = () => {
       </View>
     );
   }
+  // const doctorId = "2FZilBl6rlRI5IsPYMmyMtbFJrG2"
 
   const [docData, setDocData] = useState([]);
   const navigation = useNavigation();
@@ -73,8 +77,10 @@ const Doctorprofile = () => {
   const [selectedDate, setSelectedDate] = useState("today");
   const [todaySlots, setTodaySlots] = useState({});
   const [tomorrowSlots, setTomorrowSlots] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [dateSlots, setDateSlots] = useState({});
   const [showModal, setShowModal] = useState(false);
+  const [disableBookButton, setDisableBookButton] = useState(!true);
+  const [loading, setLoading] = useState(true);
 
   const fetchDoctorProfile = async () => {
     try {
@@ -98,6 +104,29 @@ const Doctorprofile = () => {
     fetchDoctorProfile();
   }, [x, doctorId]);
 
+  const getSlots = async () => {
+    if (selectedDate === null) return;
+    if (selectedDate === "today" || selectedDate === "tomorrow") return;
+    setLoading(true);
+    try {
+      const res = await axios.post(`${API_URL}/api/schedule`, {
+        date: selectedDate,
+        docId: doctorId
+      });
+      if (res.status !== 200 && res.status !== 201) {
+        Toast.error("Error fetching slots");
+        return;
+      }
+      const data = await res.data;
+      setDateSlots(data);
+    } catch (error) { }
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    getSlots();
+  }, [selectedDate, x])
+
   const [showHeader, setShowHeader] = useState(false);
   const scrollref = useAnimatedRef();
   const scrollOffset = useScrollViewOffset(scrollref);
@@ -120,6 +149,7 @@ const Doctorprofile = () => {
   };
 
   const handleBookClick = async () => {
+    setDisableBookButton(true);
     if (!clientAuth.currentUser) {
       Toast.warn("Please login to book an appointment");
       navigation.navigate("Sign In");
@@ -142,6 +172,7 @@ const Doctorprofile = () => {
           body: JSON.stringify(data),
         });
         const msg = await response.json();
+        setDisableBookButton(false);
         if (!response.ok) {
           Toast.error(msg);
           return;
@@ -150,10 +181,12 @@ const Doctorprofile = () => {
         setSelectedSlot(null);
         setX(!x);
       } catch (error) {
+        setDisableBookButton(false);
         Toast.error("Server unavailable");
         return;
       }
     } else {
+      setDisableBookButton(false);
       Toast.warn("Please select a time slot before booking.");
     }
   };
@@ -186,8 +219,7 @@ const Doctorprofile = () => {
   };
   const handleDateChange = (event, selectedDate) => {
     if (event.type === "set") {
-      const date = selectedDate || date;
-      setSelectedDate(date);
+      setSelectedDate(selectedDate);
     }
     setShowModal(false);
   };
@@ -234,11 +266,10 @@ const Doctorprofile = () => {
                 <View className="p-4">
                   <View className="flex-row justify-between items-center mb-4">
                     <TouchableOpacity
-                      className={`p-2 border rounded ${
-                        selectedDate === "today"
-                          ? "border-blue-700"
-                          : "border-black"
-                      }`}
+                      className={`p-2 border rounded ${selectedDate === "today"
+                        ? "border-blue-700"
+                        : "border-black"
+                        }`}
                       onPress={() => handleSlotDateSelect("today")}
                     >
                       <Text className="text-lg">TODAY</Text>
@@ -248,11 +279,10 @@ const Doctorprofile = () => {
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      className={`p-2 border rounded ${
-                        selectedDate === "tomorrow"
-                          ? "border-blue-700"
-                          : "border-black"
-                      }`}
+                      className={`p-2 border rounded ${selectedDate === "tomorrow"
+                        ? "border-blue-700"
+                        : "border-black"
+                        }`}
                       onPress={() => handleSlotDateSelect("tomorrow")}
                     >
                       <Text className="text-lg">TOMORROW</Text>
@@ -275,21 +305,33 @@ const Doctorprofile = () => {
                         onChange={handleDateChange}
                         mode="date"
                         minimumDate={today}
-                        value={formatDate(selectedDate) || new Date()}
+                        value={formatDate(selectedDate)}
                       />
                     )}
                   </View>
-                  {selectedDate === "today" && (
+                  {(selectedDate !== "today" && selectedDate !== "tomorrow") &&
+                    <View className="flex-row justify-between items-center mb-4">
+                      <View
+                        className={`p-2 border rounded border-blue-700}`}
+                        onPress={() => handleSlotDateSelect("tomorrow")}
+                      >
+                        <Text className="text-lg">{new Date(selectedDate).toLocaleDateString('en-GB')}</Text>
+                        <Text className="text-green-500">
+                          {dateSlots?.emptySlots || 0} slots
+                          available
+                        </Text>
+                      </View>
+                    </View>}
+                  {selectedDate === "today" ? (
                     <ScrollView className="flex    border w-full  ">
                       <View className="flex flex-row flex-wrap h-full pl-3 ">
                         {timeSlots.map((slot, index) => (
                           <TouchableOpacity
                             key={index}
-                            className={` m-2 border rounded w-[40%] flex p-3 text-[#2F80EDBF]    ${
-                              selectedSlot === slot.value
-                                ? "border-blue-700"
-                                : "border-gray-300"
-                            }`}
+                            className={` m-2 border rounded w-[40%] flex p-3 text-[#2F80EDBF]    ${selectedSlot === slot.value
+                              ? "border-blue-700"
+                              : "border-gray-300"
+                              }`}
                             onPress={() => setSelectedSlot(slot.value)}
                             disabled={
                               todaySlots
@@ -306,45 +348,76 @@ const Doctorprofile = () => {
                         ))}
                       </View>
                     </ScrollView>
-                  )}
-                  {selectedDate === "tomorrow" && (
-                    <ScrollView className="flex   border w-full ">
-                      <View className="flex flex-row flex-wrap h-full pl-3 ">
-                        {timeSlots.map((slot, index) => (
-                          <TouchableOpacity
-                            key={index}
-                            className={` m-2 border rounded w-[40%] flex p-3 text-[#2F80EDBF]   ${
-                              selectedSlot === slot.value
+                  )
+                    :
+                    selectedDate === "tomorrow" ? (
+                      <ScrollView className="flex   border w-full ">
+                        <View className="flex flex-row flex-wrap h-full pl-3 ">
+                          {timeSlots.map((slot, index) => (
+                            <TouchableOpacity
+                              key={index}
+                              className={` m-2 border rounded w-[40%] flex p-3 text-[#2F80EDBF]   ${selectedSlot === slot.value
                                 ? "border-blue-700"
                                 : "border-gray-300"
-                            }`}
-                            onPress={() => setSelectedSlot(slot.value)}
-                            disabled={
-                              tomorrowSlots
-                                ? tomorrowSlots[slot.value] === true
-                                  ? false
-                                  : true
-                                : false
-                            }
-                          >
-                            <Text className="text-[17px] text-center text-[#2F80EDBF]">
-                              {slot.time}
-                            </Text>
-                          </TouchableOpacity>
-                        ))}
-                      </View>
-                    </ScrollView>
-                  )}
+                                }`}
+                              onPress={() => setSelectedSlot(slot.value)}
+                              disabled={
+                                tomorrowSlots
+                                  ? tomorrowSlots[slot.value] === true
+                                    ? false
+                                    : true
+                                  : false
+                              }
+                            >
+                              <Text className="text-[17px] text-center text-[#2F80EDBF]">
+                                {slot.time}
+                              </Text>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+                      </ScrollView>
+                    )
+                      :
+                      <ScrollView className="flex   border w-full ">
+                        <View className="flex flex-row flex-wrap h-full pl-3 ">
+                          {timeSlots.map((slot, index) => (
+                            <TouchableOpacity
+                              key={index}
+                              className={` m-2 border rounded w-[40%] flex p-3 text-[#2F80EDBF]   ${selectedSlot === slot.value
+                                ? "border-blue-700"
+                                : "border-gray-300"
+                                }`}
+                              onPress={() => setSelectedSlot(slot.value)}
+                              disabled={
+                                dateSlots.slots
+                                  ? dateSlots.slots[slot.value] === true
+                                    ? false
+                                    : true
+                                  : false
+                              }
+                            >
+                              <Text className="text-[17px] text-center text-[#2F80EDBF]">
+                                {slot.time}
+                              </Text>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+                      </ScrollView>
+                  }
                   <TouchableOpacity
                     className="bg-blue-500 p-4 rounded mt-4"
                     onPress={handleBookClick}
-                    >
-                    <Text
-                      className="text-white text-center text-lg"
-                      onPress={handleBookClick}
-                    >
-                      Book
-                    </Text>
+                    disabled={disableBookButton}
+                  >
+                    {disableBookButton ?
+                      <ActivityIndicator size={27} color="#ffffff" />
+                      :
+                      <Text
+                        className="text-white text-center text-lg"
+                        onPress={handleBookClick}
+                      >
+                        Book
+                      </Text>}
                   </TouchableOpacity>
                 </View>
               </View>

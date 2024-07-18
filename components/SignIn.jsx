@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
-import { styled } from "nativewind";
 import img from "../assets/images/signinbg.png";
 import { SafeAreaView } from "react-native-safe-area-context";
 import API_URL from "../config";
@@ -17,6 +17,7 @@ import { clientAuth } from "../utils/firebase";
 import { Toast } from "toastify-react-native";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { handleLogout } from "./Logout";
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
@@ -94,13 +95,14 @@ const SignUpScreen = () => {
       const data = await res.json();
       if (!res.ok) {
         Toast.warn(data);
-        await signOut(clientAuth);
+        await handleLogout();
         return;
       }
       console.log(data);
       const jsonValue = JSON.stringify(data)
-      await AsyncStorage.setItem("doc-qToken", jsonValue, (error) => {
+      await AsyncStorage.setItem("doc-qToken", jsonValue, async (error) => {
         if (error) {
+          await handleLogout();
           console.error('Failed to save the data to the storage', error);
         } else {
           console.log('Data successfully stored');
@@ -109,26 +111,17 @@ const SignUpScreen = () => {
       Toast.success(`Welcome ${user.displayName}`);
     }
     catch (e) {
-      console.log(e);
       const errorCode = e.code;
-      console.log(errorCode);
-      try {
-        await AsyncStorage.removeItem("doc-qToken");
-        await signOut(clientAuth);
-      }
-      catch (e) { }
       setLoginButtonDisable(false);
       if (errorCode === 'auth/invalid-email' || errorCode === 'auth/missing-email')
         Toast.error("Invalid email address");
-      else if (errorCode === 'auth/wrong-password')
-        Toast.error("Invalid credentials");
-      else if (errorCode === 'auth/invalid-credential')
+      else if (errorCode === 'auth/wrong-password' || errorCode === 'auth/invalid-credential')
         Toast.error("Invalid credentials");
       else if (errorCode === 'auth/user-not-found')
         Toast.error("User not found");
       else if (errorCode.includes('auth/requests-from-referer'))
         Toast.error("Unauthorized access");
-      else if(errorCode === 'auth/requests-from-this-android-client-application-<empty>-are-blocked.')
+      else if (errorCode === 'auth/requests-from-this-android-client-application-<empty>-are-blocked.')
         Toast.error("Unauthorized access");
       else
         Toast.error("An error occurred while logging in");
@@ -184,11 +177,19 @@ const SignUpScreen = () => {
           </View>
           {isSignupPage ?
             <TouchableOpacity className="bg-green-500 p-4 rounded-lg items-center mb-4" disabled={registerButtonDisable} onPress={handleSignUpPress}>
-              <Text className="text-white font-bold">Sign Up</Text>
+              {
+                registerButtonDisable ?
+                  <ActivityIndicator size={20} color="#ffffff" />
+                  :
+                  <Text className="text-white font-bold">Sign Up</Text>}
             </TouchableOpacity>
             :
             <TouchableOpacity className="bg-green-500 p-4 rounded-lg items-center mb-4" disabled={loginButtonDisable} onPress={handleSignInPress}>
-              <Text className="text-white font-bold">Sign In</Text>
+              {
+                loginButtonDisable ?
+                  <ActivityIndicator size={20} color="#ffffff" />
+                  :
+                  <Text className="text-white font-bold">Log In</Text>}
             </TouchableOpacity>
           }
           <View className="flex-row justify-center items-center mb-4">
@@ -230,7 +231,7 @@ const SignUpScreen = () => {
                 : "Don’t have an account?"}{" "}
             </Text>
             <Text className="text-blue-500" onPress={handleSignUpPagePress}>
-              {isSignupPage ? "Sign in" : "Sign up"}{" "}
+              {isSignupPage ? "Log in" : "Sign up"}{" "}
             </Text>
           </TouchableOpacity>
         </View>
