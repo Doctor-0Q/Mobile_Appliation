@@ -2,14 +2,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {
-    Entypo,
-    EvilIcons,
-    Octicons,
-    Feather,
-    Ionicons,
-    MaterialCommunityIcons
-} from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { handleLogout } from '../Logout';
 
 const ProfileScreen = () => {
@@ -32,31 +25,28 @@ const ProfileScreen = () => {
             </View>
             <View
                 className="w-full">
-                {/* <MenuItem icon="person-circle-outline" text="Edit Profile" />
-                <MenuItem icon="heart-outline" text="Favorite" />
-                <MenuItem icon="notifications-outline" text="Notifications" />
-                <MenuItem icon="settings-outline" text="Settings" />
-                <MenuItem icon="help-circle-outline" text="Help and Support" />
-                <MenuItem icon="document-text-outline" text="Terms and Conditions" />
-                <MenuItem icon="log-out-outline" text="Log Out" /> */}
                 <MenuItem imageSource={require("../../assets/ProfileSettings/user-edit.png")} text="Edit Profile" />
                 <MenuItem imageSource={require("../../assets/ProfileSettings/heart.png")} text="Favorite" />
                 <MenuItem imageSource={require("../../assets/ProfileSettings/notification.png")} text="Notifications" />
                 <MenuItem imageSource={require("../../assets/ProfileSettings/setting-2.png")} text="Settings" />
                 <MenuItem imageSource={require("../../assets/ProfileSettings/message-question.png")} text="Help and Support" />
                 <MenuItem imageSource={require("../../assets/ProfileSettings/security-safe.png")} text="Terms and Conditions" />
-                <TouchableOpacity onPress={handleLogout}>
-                <MenuItem imageSource={require("../../assets/ProfileSettings/logout.png")} text="Log Out" />
-                </TouchableOpacity>
+                <MenuItem imageSource={require("../../assets/ProfileSettings/logout.png")} text="Log Out"/>
             </View>
         </ScrollView>
     );
 };
 
+const handleMenuPress = (text) => {
+    if (text === 'Log Out') {
+        handleLogout();
+    }
+}
+
 const MenuItem = ({ imageSource, text }) => {
     return (
         <TouchableOpacity
-            className="flex-row items-center justify-between py-3 border-b-2 border-[#ddd]">
+            className="flex-row items-center justify-between py-3 border-b-2 border-[#ddd]" onPress={() => handleMenuPress(text)}>
             <Image source={imageSource} style={styles.menuIcon} />
             <Text
                 className="ml-4 text-base text-[#004D6C] flex-1"
