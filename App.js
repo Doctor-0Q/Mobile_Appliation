@@ -99,50 +99,14 @@ const App = () => {
   return (
     <>
       {(user && !emailVerified) ? (
-        <NavigationContainer>
-          <Tab.Navigator
-            screenOptions={({ route }) => ({
-              tabBarIcon: ({ focused, color, size }) => {
-                let iconName;
-                if (route.name === 'Home') {
-                  iconName = focused ? 'home' : 'home-outline';
-                } else if (route.name === 'Search') {
-                  iconName = focused ? 'search' : 'search-outline';
-                } else if (route.name === 'Notifications') {
-                  iconName = focused ? 'notifications' : 'notifications-outline';
-                } else if (route.name === 'Profile' || route.name === 'Sign In') {
-                  iconName = focused ? 'person' : 'person-outline';
-                }
-
-                return (
-                  <View style={focused ? styles.focusedIconContainer : null}>
-                    <Icon name={iconName} size={size} color={color} />
-                  </View>
-                );
-              },
-              tabBarActiveTintColor: 'teal',
-              tabBarInactiveTintColor: 'gray',
-              tabBarStyle: {
-                height: 70,
-                paddingVertical: 10,
-                borderTopWidth: 1,
-                borderTopColor: 'lightgray',
-              },
-              tabBarIconStyle: {
-                marginTop: 5,
-              },
-            })}
-          >
-            <Tab.Screen name="Home" component={HomePage} />
-            <Tab.Screen name="Search" component={SearchStack} />
-            <Tab.Screen name="Notifications" component={onboarding} />
-            {user ? (
-              <Tab.Screen name="Profile" component={ProfileSettings} />
-            ) : (
-              <Tab.Screen name="Sign In" component={SignIn} />
-            )}
-          </Tab.Navigator>
-        </NavigationContainer>
+        <>
+          <NavigationContainer>
+            <Tab.Navigator>
+              <Tab.Screen name="EmailVerification" component={EmailVerification} />
+              <Tab.Screen name="LogOut" component={Logout} />
+            </Tab.Navigator>
+          </NavigationContainer>
+        </>
       ) : (user && emailVerified && !userInfo) ? (
         <NavigationContainer>
           <Tab.Navigator>
