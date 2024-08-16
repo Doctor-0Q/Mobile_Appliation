@@ -18,6 +18,7 @@ import { Toast } from "toastify-react-native";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { handleLogout } from "./Logout";
+import googleSignIn from "./signInOptions/googleSignIn";
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
@@ -50,10 +51,15 @@ const SignUpScreen = () => {
       user: userType,
     }
     try {
-      const response = await axios.post(`${API_URL}/api/user/signup`, data);
-      const responseData = await response.data;
+      const response = await fetch(`${API_URL}/api/user/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      const responseData = await response.json();
       setRegisterButtonDisable(false);
-      console.log(response.status);
       if (response.status !== 201) {
         Toast.error(responseData);
         return;
@@ -68,7 +74,8 @@ const SignUpScreen = () => {
         console.log(e);
       }
     } catch (error) {
-      Toast.error("Server unavailable! Please try again");
+      console.log(error);
+      Toast.error("Server unavailable, Please try again!!");
     }
     setRegisterButtonDisable(false);
   };
@@ -195,34 +202,32 @@ const SignUpScreen = () => {
           <View className="flex-row justify-center items-center mb-4">
             <Text>or</Text>
           </View>
-          {isSignupPage && (
-            <View className="flex-row justify-center space-x-4 mb-4">
-              <TouchableOpacity className="p-2 border rounded-full">
-                <Image
-                  source={{
-                    uri: "https://img.icons8.com/color/48/000000/google-logo.png",
-                  }}
-                  className="w-10 h-10"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity className="p-2 border rounded-full">
-                <Image
-                  source={{
-                    uri: "https://img.icons8.com/ios-filled/50/000000/mac-os.png",
-                  }}
-                  className="w-10 h-10"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity className="p-2 border rounded-full">
-                <Image
-                  source={{
-                    uri: "https://img.icons8.com/color/48/000000/facebook-new.png",
-                  }}
-                  className="w-10 h-10"
-                />
-              </TouchableOpacity>
-            </View>
-          )}
+          <View className="flex-row justify-center space-x-4 mb-4">
+            <TouchableOpacity className="p-2 border rounded-full" onPress={googleSignIn}>
+              <Image
+                source={{
+                  uri: "https://img.icons8.com/color/48/000000/google-logo.png",
+                }}
+                className="w-10 h-10"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity className="p-2 border rounded-full">
+              <Image
+                source={{
+                  uri: "https://img.icons8.com/ios-filled/50/000000/mac-os.png",
+                }}
+                className="w-10 h-10"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity className="p-2 border rounded-full">
+              <Image
+                source={{
+                  uri: "https://img.icons8.com/color/48/000000/facebook-new.png",
+                }}
+                className="w-10 h-10"
+              />
+            </TouchableOpacity>
+          </View>
 
           <TouchableOpacity className="flex-row justify-center">
             <Text>

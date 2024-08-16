@@ -153,7 +153,7 @@ const App = () => {
                 },
               })}
             >
-              <Tab.Screen name="Home" component={HomePage} />
+              <Tab.Screen name="Home" component={SignIn} />
               <Tab.Screen name="Search" component={SearchStack} />
               <Tab.Screen name="Notifications" component={onboarding} />
               {user ? (
