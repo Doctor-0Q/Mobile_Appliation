@@ -4,8 +4,16 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'rea
 import Icon from 'react-native-vector-icons/Ionicons';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { handleLogout } from '../Logout';
+import { useNavigation } from "@react-navigation/native";
 
 const ProfileScreen = () => {
+
+    const navigation = useNavigation();
+
+    const handleEditProfile = () => {
+        navigation.navigate("EditProfile"); 
+      };
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <View
@@ -20,12 +28,12 @@ const ProfileScreen = () => {
                         <MaterialCommunityIcons name="pencil" size={16} color="#fff" />
                     </TouchableOpacity>
                 </View>
-                <Text className="text-xl font-bold text-[#004D6C]">Jhon Doe</Text>
+                <Text className="mt-0 text-xl font-bold text-[#004D6C]">Jhon Doe</Text>
                 <Text className="text-[#004D6C80] text-lg">+123 856479683</Text>
             </View>
             <View
                 className="w-full">
-                <MenuItem imageSource={require("../../assets/ProfileSettings/user-edit.png")} text="Edit Profile" />
+                <MenuItem imageSource={require("../../assets/ProfileSettings/user-edit.png")} text="Edit Profile" onPress={handleEditProfile}/>
                 <MenuItem imageSource={require("../../assets/ProfileSettings/heart.png")} text="Favorite" />
                 <MenuItem imageSource={require("../../assets/ProfileSettings/notification.png")} text="Notifications" />
                 <MenuItem imageSource={require("../../assets/ProfileSettings/setting-2.png")} text="Settings" />

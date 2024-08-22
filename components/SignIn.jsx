@@ -152,7 +152,7 @@ const SignUpScreen = () => {
               />
               {/*  */}
               <TextInput
-                className="border-gray-300 border rounded-lg p-4 mb-4"
+                className="mt-0 border-gray-300 border rounded-lg p-4 mb-4"
                 placeholder="User Type *(doctors or patients)"
                 value={userType}
                 onChangeText={(text) => setUserType(text)}
