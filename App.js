@@ -164,7 +164,7 @@ const App = () => {
               })}
             >
               {/* <Tab.Screen name="profile" component={ProfileSettings} /> */}
-              <Tab.Screen name="Home" component={EditProfile} />
+              <Tab.Screen name="Home" component={SignIn} />
               <Tab.Screen name="Search" component={SearchStack} />
               <Tab.Screen name="Notifications" component={onboarding} />
               {/* <Tab.Screen name="Edit Profile" component={EditProfile} /> */}
