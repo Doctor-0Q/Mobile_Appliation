@@ -112,7 +112,7 @@ const EditProfileDoctor = () => {
             style={styles.iconContainer}
             onPress={() => handlePress("dob")}
           >
-            <Ionicons name="calendar" size={24} color="#004D6C" />
+            <Ionicons name="calendar" size={24} color="#0000AC" />
           </TouchableOpacity>
         </View>
       </Pressable>
@@ -133,7 +133,7 @@ const EditProfileDoctor = () => {
             style={styles.iconContainer}
             onPress={() => handlePress("openingTime")}
           >
-            <Ionicons name="time-outline" size={24} color="#004D6C" />
+            <Ionicons name="time-outline" size={24} color="#0000AC" />
           </TouchableOpacity>
         </View>
       </Pressable>
@@ -154,7 +154,7 @@ const EditProfileDoctor = () => {
             style={styles.iconContainer}
             onPress={() => handlePress("closingTime")}
           >
-            <Ionicons name="time-outline" size={24} color="#004D6C" />
+            <Ionicons name="time-outline" size={24} color="#0000AC" />
           </TouchableOpacity>
         </View>
       </Pressable>
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 11,
-    color: "#004D6C",
+    color: "#0000AC",
   },
   inputRow: {
     display: "flex",
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   submitButton: {
-    backgroundColor: "#004D6C",
+    backgroundColor: "#0000AC",
     paddingVertical: 15,
     alignItems: "center",
     borderRadius: 5,

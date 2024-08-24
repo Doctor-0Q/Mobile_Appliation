@@ -1,18 +1,26 @@
 import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import {
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
 
 const CustomDrawerContent = (props) => {
+
+  const handleEditProfile = () => {
+    props.navigation.navigate("EditProfileDoctor"); 
+  };
+
   return (
     <DrawerContentScrollView {...props}>
       <View className="mx-auto mt-2 mb-4">
+      <TouchableOpacity onPress={handleEditProfile}>
         <Image
           source={require("../assets/dashboard/download.jpeg")}
           className="w-20 h-20"
+          onPress={handleEditProfile}
         />
+        </TouchableOpacity>
         <Text className="font-bold text-xl">John Doe</Text>
       </View>
       <DrawerItemList {...props} />
