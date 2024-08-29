@@ -17,6 +17,15 @@
       "bundleIdentifier": "com.ksshreyas482.DOC_Q"
     },
     "android": {
+      "infoPlist": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": [
+              "com.googleusercontent.apps.72307864794-1vuq2apibl4tg6on2f2nmoq5vul3ltvq"
+            ]
+          }
+        ]
+      },
       "googleServicesFile": "./google-services.json",
       "permissions": [
         "INTERNET"

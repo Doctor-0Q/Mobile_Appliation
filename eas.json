@@ -9,7 +9,8 @@
       },
       "production": {
         "android": {
-          "buildType": "apk"
+          "buildType": "apk",
+          "simulator": true
         }
       }
     }
