@@ -7,6 +7,7 @@ import SignIn from './components/SignIn.jsx';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ProfileSettings from "./components/ProfileSettings/ProfileSettings.jsx"
+import EditProfile from "./components/EditProfile/EditProfile.jsx"
 import Search from "./components/searchpage/Search.jsx"
 import logo from "./components/Logopage.jsx"
 import onboarding from "./components/Onboardingpage.jsx"
@@ -23,6 +24,12 @@ import { signInWithCustomToken } from "firebase/auth";
 import Loading from "./components/Loading.jsx";
 import DoctorDetails from "./components/Details/DoctorDetails";
 import PatientDetails from "./components/Details/PatientDetails";
+import { AppRegistry } from 'react-native';
+import { name as appName } from './app.json';
+// import './global.css';
+
+
+AppRegistry.registerComponent(appName, () => App);
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -125,10 +132,13 @@ const App = () => {
                 tabBarIcon: ({ focused, color, size }) => {
                   let iconName;
                   if (route.name === 'Home') {
+                    // if (route.name === 'settings') {
+                    // iconName = focused ? 'settings' : 'home-outline';
                     iconName = focused ? 'home' : 'home-outline';
                   } else if (route.name === 'Search') {
                     iconName = focused ? 'search' : 'search-outline';
                   } else if (route.name === 'Notifications') {
+                  // } else if (route.name === 'editProfile') {
                     iconName = focused ? 'notifications' : 'notifications-outline';
                   } else if (route.name === 'Profile' || route.name === 'Sign In') {
                     iconName = focused ? 'person' : 'person-outline';
@@ -156,6 +166,7 @@ const App = () => {
               <Tab.Screen name="Home" component={HomePage} />
               <Tab.Screen name="Search" component={SearchStack} />
               <Tab.Screen name="Notifications" component={onboarding} />
+              {/* <Tab.Screen name="Edit Profile" component={EditProfile} /> */}
               {user ? (
                 <Tab.Screen name="Profile" component={ProfileSettings} />
               ) : (
