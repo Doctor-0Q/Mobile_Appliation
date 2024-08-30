@@ -17,15 +17,6 @@
       "bundleIdentifier": "com.ksshreyas482.DOC_Q"
     },
     "android": {
-      "infoPlist": {
-        "CFBundleURLTypes": [
-          {
-            "CFBundleURLSchemes": [
-              "com.googleusercontent.apps.72307864794-1vuq2apibl4tg6on2f2nmoq5vul3ltvq"
-            ]
-          }
-        ]
-      },
       "googleServicesFile": "./google-services.json",
       "permissions": [
         "INTERNET"
@@ -35,7 +26,7 @@
       },
       "package": "com.ksshreyas482.DOC_Q"
     },
-    "icon": "./assets/DOC-Q_Final_Logo.jpg",
+    "icon": "./assets/DOC-Q_Final_Logo.png",
     "extra": {
       "eas": {
         "projectId": "2406dc3c-9ac1-4035-af47-9be0e2ee16e9"
