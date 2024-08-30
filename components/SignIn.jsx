@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,8 @@ import {
   Image,
   ScrollView,
   ActivityIndicator,
+  Pressable,
+  FlatList,
 } from "react-native";
 import img from "../assets/images/signinbg.png";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -30,6 +32,24 @@ const SignUpScreen = () => {
   const [isSignupPage, setSignupPage] = useState(false);
   const [registerButtonDisable, setRegisterButtonDisable] = useState(false);
   const [loginButtonDisable, setLoginButtonDisable] = useState(false);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+
+  const options = [
+    { label: 'Doctor', value: 'doctor' },
+    { label: 'Patient', value: 'patient' },
+  ];
+
+  const handleSelect = (value) => {
+    setUserType(value);
+    setDropdownVisible(false);
+  };
+
+  useEffect(() => {
+    if (userType) {
+      console.log(userType);
+    }
+  }, [userType]);
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -151,12 +171,31 @@ const SignUpScreen = () => {
                 onChangeText={(text) => setFullName(text)}
               />
               {/*  */}
-              <TextInput
-                className="mt-0 border-gray-300 border rounded-lg p-4 mb-4"
-                placeholder="User Type *(doctors or patients)"
-                value={userType}
-                onChangeText={(text) => setUserType(text)}
-              />
+              <View className=" ">
+                <Pressable
+                  className="border border-gray-300 rounded-lg p-4 mb-4"
+                  onPress={() => setDropdownVisible(!dropdownVisible)}
+                >
+                  <Text className="text-base">
+                    {userType ? `Selected: ${userType.charAt(0).toUpperCase() + userType.slice(1)}` : 'Select User Type'}
+                  </Text>
+                </Pressable>
+
+                {dropdownVisible && (
+                  <View className="border mb-4 border-gray-300 rounded-lg p-2">
+                    {options.map((item) => (
+                      <Pressable
+                        key={item.value}
+                        className="p-2"
+                        onPress={() => handleSelect(item.value)}
+                      >
+                        <Text className="text-base">{item.label}</Text>
+                      </Pressable>
+                    ))}
+                  </View>
+                )}
+              </View>
+
               {/* Change this to dropdown to select patient or doctor */}
             </>
           )}
