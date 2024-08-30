@@ -20,8 +20,6 @@ import { Toast } from "toastify-react-native";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { handleLogout } from "./Logout";
-import googleSignIn from "./signInOptions/googleSignIn";
-import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
@@ -96,7 +94,7 @@ const SignUpScreen = () => {
       }
     } catch (error) {
       console.log(error);
-      Toast.error("Server unavailable, Please try again!!");
+      Toast.error("Server unavailable! Please try again");
     }
     setRegisterButtonDisable(false);
   };
@@ -172,33 +170,31 @@ const SignUpScreen = () => {
                 onChangeText={(text) => setFullName(text)}
               />
               {/*  */}
-              <View>
+              <View className=" ">
                 <Pressable
-                  className="border border-gray-300 rounded-lg p-4 mb-4 "
+                  className="border border-gray-300 rounded-lg p-4 mb-4"
                   onPress={() => setDropdownVisible(!dropdownVisible)}
                 >
-                  <View className="flex-row justify-between items-center">
-                    <Text className="text-base">
-                      {userType ? ` ${userType.charAt(0).toUpperCase() + userType.slice(1)}` : 'Select User Type'}
-                    </Text>
-                    {/* Down arrow icon */}
-                    <Icon name={dropdownVisible ? 'arrow-drop-up' : 'arrow-drop-down'} size={24} color="gray" />
-                  </View>
-                  {dropdownVisible && (
-                    <View className="border-gray-300 rounded-lg p-2">
-                      {options.map((item) => (
-                        <Pressable
-                          key={item.value}
-                          className="p-2 border-b"
-                          onPress={() => handleSelect(item.value)}
-                        >
-                          <Text className="text-base">{item.label}</Text>
-                        </Pressable>
-                      ))}
-                    </View>
-                  )}
+                  <Text className="text-base">
+                    {userType ? `Register as: ${(userType.charAt(0).toUpperCase()) + userType.slice(1)}` : 'Select User Type *'}
+                  </Text>
                 </Pressable>
+
+                {dropdownVisible && (
+                  <View className="border mb-4 border-gray-300 rounded-lg p-2">
+                    {options.map((item) => (
+                      <Pressable
+                        key={item.value}
+                        className="p-2"
+                        onPress={() => handleSelect(item.value)}
+                      >
+                        <Text className="text-base">{item.label}</Text>
+                      </Pressable>
+                    ))}
+                  </View>
+                )}
               </View>
+
               {/* Change this to dropdown to select patient or doctor */}
             </>
           )}
@@ -220,7 +216,6 @@ const SignUpScreen = () => {
             <TouchableOpacity
               onPress={togglePasswordVisibility}
               className="absolute w-12 h-12 right-1 top-2 p-3"
-              
             >
               <Text>{showPassword ? "🙈" : "👁️"}</Text>
             </TouchableOpacity>

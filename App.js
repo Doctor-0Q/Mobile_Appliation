@@ -60,7 +60,6 @@ const App = () => {
       setLoading(true);
       if (user) {
         const claims = (await user.getIdTokenResult()).claims;
-        console.log(claims);
         setEmailVerified(claims?.email_verified);
         setUserInfo(claims?.info);
         if (claims.role === 'doctor')
