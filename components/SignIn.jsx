@@ -21,6 +21,7 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { handleLogout } from "./Logout";
 import googleSignIn from "./signInOptions/googleSignIn";
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
@@ -171,31 +172,33 @@ const SignUpScreen = () => {
                 onChangeText={(text) => setFullName(text)}
               />
               {/*  */}
-              <View className=" ">
+              <View>
                 <Pressable
-                  className="border border-gray-300 rounded-lg p-4 mb-4"
+                  className="border border-gray-300 rounded-lg p-4 mb-4 "
                   onPress={() => setDropdownVisible(!dropdownVisible)}
                 >
-                  <Text className="text-base">
-                    {userType ? `Selected: ${userType.charAt(0).toUpperCase() + userType.slice(1)}` : 'Select User Type'}
-                  </Text>
-                </Pressable>
-
-                {dropdownVisible && (
-                  <View className="border mb-4 border-gray-300 rounded-lg p-2">
-                    {options.map((item) => (
-                      <Pressable
-                        key={item.value}
-                        className="p-2"
-                        onPress={() => handleSelect(item.value)}
-                      >
-                        <Text className="text-base">{item.label}</Text>
-                      </Pressable>
-                    ))}
+                  <View className="flex-row justify-between items-center">
+                    <Text className="text-base">
+                      {userType ? ` ${userType.charAt(0).toUpperCase() + userType.slice(1)}` : 'Select User Type'}
+                    </Text>
+                    {/* Down arrow icon */}
+                    <Icon name={dropdownVisible ? 'arrow-drop-up' : 'arrow-drop-down'} size={24} color="gray" />
                   </View>
-                )}
+                  {dropdownVisible && (
+                    <View className="border-gray-300 rounded-lg p-2">
+                      {options.map((item) => (
+                        <Pressable
+                          key={item.value}
+                          className="p-2 border-b"
+                          onPress={() => handleSelect(item.value)}
+                        >
+                          <Text className="text-base">{item.label}</Text>
+                        </Pressable>
+                      ))}
+                    </View>
+                  )}
+                </Pressable>
               </View>
-
               {/* Change this to dropdown to select patient or doctor */}
             </>
           )}
