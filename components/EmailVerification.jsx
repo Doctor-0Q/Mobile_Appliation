@@ -47,49 +47,49 @@ const EmailVerification = () => {
     useEffect(() => {
         let timer;
         if (disableGetOtpButton) {
-          timer = setTimeout(() => {
-            setDisableGetOtpButton(false);
-          }, 120000); // 2 minutes in milliseconds
+            timer = setTimeout(() => {
+                setDisableGetOtpButton(false);
+            }, 120000); // 2 minutes in milliseconds
         }
-        else{
+        else {
             setDisableGetOtpButton(false);
         }
-    
+
         return () => {
-          if (timer) {
-            clearTimeout(timer);
-          }
+            if (timer) {
+                clearTimeout(timer);
+            }
         };
-      }, [disableGetOtpButton]);
+    }, [disableGetOtpButton]);
 
     const handleGetOtp = async (e) => {
         e.preventDefault();
         setDisableGetOtpButton(true);
         if (!token) {
-          Toast.error("User not logged in");
-          navigation.navigate("Sign In");
-          return;
+            Toast.error("User not logged in");
+            navigation.navigate("Sign In");
+            return;
         }
         try {
-          const res = await fetch(`${API_URL}/api/resend-otp`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ token: token })
-          });
-          if (!res.ok) {
-            Toast.error("Error sending email");
-            return;
-          }
-          Toast.success("Otp sent successfully");
+            const res = await fetch(`${API_URL}/api/resend-otp`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ token: token })
+            });
+            if (!res.ok) {
+                Toast.error("Error sending email");
+                return;
+            }
+            Toast.success("Otp sent successfully");
         }
         catch (e) {
-          Toast.error("Network unavailable! Try again");
-          setDisableGetOtpButton(false);
-          return;
+            Toast.error("Network unavailable! Try again");
+            setDisableGetOtpButton(false);
+            return;
         }
-    } 
+    }
 
     const handleVerifyOtp = async (e) => {
         e.preventDefault();
@@ -112,12 +112,17 @@ const EmailVerification = () => {
         }
 
         try {
-            const res = await axios.post(`${API_URL}/api/verify-otp`, {
-                otp: otp,
-                token: token
-            })
-
-            const data = await res.data;
+            const res = await fetch(`${API_URL}/api/verify-otp`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    otp: otp,
+                    token: token
+                })
+            });
+            const data = await res.json();
             console.log(data);
             setVerifyButtonLoading(false);
             if (res.status !== 200) {

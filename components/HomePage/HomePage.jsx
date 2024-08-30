@@ -19,9 +19,53 @@ import Pill from "../../assets/Homepage/Pill.png";
 import { useNavigation } from '@react-navigation/native';
 import { clientAuth } from "../../utils/firebase";
 import Icon from 'react-native-vector-icons/Ionicons';
+import API_URL from "../../config";
+import Loading from "../Loading";
+import { CommonActions } from '@react-navigation/native';
 
 const HomePage = () => {
   const navigation = useNavigation();
+  const [doctors, setDoctors] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const getDoctorNames = async () => {
+    const res = await fetch(`${API_URL}/api/search/clinics`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ search: "Bangalore" })
+    });
+    const data = await res.json();
+    // data.sort((a, b) => a.name.localeCompare(b.name));
+    setDoctors(data);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    getDoctorNames();
+  }, []);
+
+  const handlePress = (id) => {
+    navigation.navigate('Search');
+    // navigation.navigate('Search', { screen: 'Doctorprofile', params: { doctorId: id } });
+    // navigation.dispatch(
+    //   CommonActions.navigate({
+    //     name:'Search',
+    //     params: {
+    //       screen: 'Doctorprofile',
+    //       params: {
+    //         doctorId: id
+    //       }
+    //     }
+    //   })
+    // )
+  };
+
+  if (loading) {
+    return <Loading />
+  }
+
   return (
     <>
       {
@@ -158,7 +202,32 @@ const HomePage = () => {
               </TouchableOpacity>
             </View>
             {/* Repeat for other specialists */}
-            <View className=" p-4 mt-4 rounded-lg text-[#004D6C]  shadow-sm">
+            {doctors.map((doctor) =>
+              <View className=" p-4 mt-4 rounded-lg text-[#004D6C]  shadow-sm" key={doctor.data.id}>
+                <View className="flex-row items-center">
+                  <Image
+                    source={doc} //
+                    className=" w-24 h-24 "
+                  />
+                  <View className="ml-3 ">
+                    <Text className="font-semibold text-[#004D6C]">
+                      {doctor.data.name}
+                    </Text>
+                    <Text className="text-[#004D6C]">{doctor.data?.specializations} | {doctor.data?.firm}</Text>
+                    {/* <View className="flex-row items-center mt-2"> */}
+                    {/* <Text className="text-yellow-500 ">4.8 ⭐️</Text> */}
+                    <Text className="text-[#004D6C]">9:30am - 7:30pm</Text>
+                    {/* </View> */}
+                  </View>
+                </View>
+                <TouchableOpacity className="mt-4 bg-[#F0F4FC] py-2 rounded-lg" key={doctor.data.id} onPress={() => handlePress(doctor.data.id)}>
+                  <Text className="text-center text-[#004D6C] text-xl font-bold">
+                    Book Appointment
+                  </Text>
+                </TouchableOpacity>
+              </View>)
+            }
+            {/* <View className=" p-4 mt-4 rounded-lg text-[#004D6C] shadow-sm">
               <View className="flex-row items-center">
                 <Image
                   source={doc} //
@@ -180,53 +249,7 @@ const HomePage = () => {
                   Book Appointment
                 </Text>
               </TouchableOpacity>
-            </View>
-            <View className=" p-4 mt-4 rounded-lg text-[#004D6C] shadow-sm">
-              <View className="flex-row items-center">
-                <Image
-                  source={doc} //
-                  className=" w-24 h-24 "
-                />
-                <View className="ml-3 ">
-                  <Text className="font-semibold text-[#004D6C]">
-                    Robert Johnson
-                  </Text>
-                  <Text className="text-[#004D6C]">Neurologist | ABC hospital</Text>
-                  <View className="flex-row items-center mt-2">
-                    <Text className="text-yellow-500 ">4.8 ⭐️</Text>
-                    <Text className="ml-2 text-[#004D6C]">10:30am - 5:30pm</Text>
-                  </View>
-                </View>
-              </View>
-              <TouchableOpacity className="mt-4 bg-[#F0F4FC] py-2 rounded-lg">
-                <Text className="text-center text-[#004D6C] text-xl font-bold">
-                  Book Appointment
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View className=" p-4 mt-4 rounded-lg text-[#004D6C] shadow-sm">
-              <View className="flex-row items-center">
-                <Image
-                  source={doc} //
-                  className=" w-24 h-24 "
-                />
-                <View className="ml-3 ">
-                  <Text className="font-semibold text-[#004D6C]">
-                    Robert Johnson
-                  </Text>
-                  <Text className="text-[#004D6C]">Neurologist | ABC hospital</Text>
-                  <View className="flex-row items-center mt-2">
-                    <Text className="text-yellow-500 ">4.8 ⭐️</Text>
-                    <Text className="ml-2 text-[#004D6C]">10:30am - 5:30pm</Text>
-                  </View>
-                </View>
-              </View>
-              <TouchableOpacity className="mt-4 bg-[#F0F4FC] py-2 rounded-lg">
-                <Text className="text-center text-[#004D6C] text-xl font-bold">
-                  Book Appointment
-                </Text>
-              </TouchableOpacity>
-            </View>
+            </View> */}
           </View>
         </ScrollView>
       }

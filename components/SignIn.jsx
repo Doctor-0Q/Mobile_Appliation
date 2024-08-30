@@ -70,10 +70,15 @@ const SignUpScreen = () => {
       user: userType,
     }
     try {
-      const response = await axios.post(`${API_URL}/api/user/signup`, data);
-      const responseData = await response.data;
+      const response = await fetch(`${API_URL}/api/user/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      const responseData = await response.json();
       setRegisterButtonDisable(false);
-      console.log(response.status);
       if (response.status !== 201) {
         Toast.error(responseData);
         return;
@@ -88,6 +93,7 @@ const SignUpScreen = () => {
         console.log(e);
       }
     } catch (error) {
+      console.log(error);
       Toast.error("Server unavailable! Please try again");
     }
     setRegisterButtonDisable(false);
@@ -210,7 +216,6 @@ const SignUpScreen = () => {
             <TouchableOpacity
               onPress={togglePasswordVisibility}
               className="absolute w-12 h-12 right-1 top-2 p-3"
-              
             >
               <Text>{showPassword ? "🙈" : "👁️"}</Text>
             </TouchableOpacity>
