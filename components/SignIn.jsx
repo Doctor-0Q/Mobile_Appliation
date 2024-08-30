@@ -14,7 +14,7 @@ import img from "../assets/images/signinbg.png";
 import { SafeAreaView } from "react-native-safe-area-context";
 import API_URL from "../config";
 import axios from "axios";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { clientAuth } from "../utils/firebase";
 import { Toast } from "toastify-react-native";
 import { useNavigation } from '@react-navigation/native';
@@ -30,14 +30,14 @@ const SignUpScreen = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [userType, setUserType] = useState("");
-  const [isSignupPage, setSignupPage] = useState(false);
+  const [isSignupPage, setSignupPage] = useState(!true);
   const [registerButtonDisable, setRegisterButtonDisable] = useState(false);
   const [loginButtonDisable, setLoginButtonDisable] = useState(false);
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const options = [
     { label: 'Doctor', value: 'doctor' },
-    { label: 'Patient', value: 'patient' },
+    { label: 'User', value: 'user' },
   ];
 
   const handleSelect = (value) => {
@@ -219,7 +219,8 @@ const SignUpScreen = () => {
             />
             <TouchableOpacity
               onPress={togglePasswordVisibility}
-              className="absolute right-4 top-4"
+              className="absolute w-12 h-12 right-1 top-2 p-3"
+              
             >
               <Text>{showPassword ? "🙈" : "👁️"}</Text>
             </TouchableOpacity>
@@ -241,7 +242,7 @@ const SignUpScreen = () => {
                   <Text className="text-white font-bold">Log In</Text>}
             </TouchableOpacity>
           }
-          <View className="flex-row justify-center items-center mb-4">
+          {/* <View className="flex-row justify-center items-center mb-4">
             <Text>or</Text>
           </View>
           <View className="flex-row justify-center space-x-4 mb-4">
@@ -269,7 +270,7 @@ const SignUpScreen = () => {
                 className="w-10 h-10"
               />
             </TouchableOpacity>
-          </View>
+          </View> */}
 
           <TouchableOpacity className="flex-row justify-center">
             <Text>
