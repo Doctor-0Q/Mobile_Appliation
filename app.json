@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "DOC-Q",
+    "name": "test",
     "slug": "test",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,25 +13,22 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.ksshreyas482.DOC_Q"
+      "supportsTablet": true
     },
     "android": {
-      "googleServicesFile": "./google-services.json",
       "permissions": [
         "INTERNET"
       ],
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
       },
-      "package": "com.ksshreyas482.DOC_Q"
+      "package": "com.ksshreyas482.test"
     },
     "icon": "./assets/DOC-Q_Final_Logo.png",
     "extra": {
       "eas": {
         "projectId": "2406dc3c-9ac1-4035-af47-9be0e2ee16e9"
       }
-    },
-    "plugins": ["@react-native-google-signin/google-signin"]
+    }
   }
 }

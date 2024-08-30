@@ -20,7 +20,6 @@ import { Toast } from "toastify-react-native";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { handleLogout } from "./Logout";
-import googleSignIn from "./signInOptions/googleSignIn";
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
@@ -71,15 +70,10 @@ const SignUpScreen = () => {
       user: userType,
     }
     try {
-      const response = await fetch(`${API_URL}/api/user/signup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      });
-      const responseData = await response.json();
+      const response = await axios.post(`${API_URL}/api/user/signup`, data);
+      const responseData = await response.data;
       setRegisterButtonDisable(false);
+      console.log(response.status);
       if (response.status !== 201) {
         Toast.error(responseData);
         return;
@@ -94,8 +88,7 @@ const SignUpScreen = () => {
         console.log(e);
       }
     } catch (error) {
-      console.log(error);
-      Toast.error("Server unavailable, Please try again!!");
+      Toast.error("Server unavailable! Please try again");
     }
     setRegisterButtonDisable(false);
   };
