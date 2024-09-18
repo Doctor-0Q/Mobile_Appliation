@@ -3,15 +3,15 @@ import { View, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomePage from "./components/HomePage/HomePage";
-import SignIn from './components/SignIn.jsx';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/Ionicons';
-import ProfileSettings from "./components/ProfileSettings/ProfileSettings.jsx"
-import EditProfile from "./components/EditProfile/EditProfile.jsx"
-import Search from "./components/searchpage/Search.jsx"
-import logo from "./components/Logopage.jsx"
-import onboarding from "./components/Onboardingpage.jsx"
-import Notifications from "./components/Notificationspage/NotificationScreen.jsx"
+import SignIn from "./components/SignIn.jsx";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Icon from "react-native-vector-icons/Ionicons";
+import ProfileSettings from "./components/ProfileSettings/ProfileSettings.jsx";
+import EditProfile from "./components/EditProfile/EditProfile.jsx";
+import Search from "./components/searchpage/Search.jsx";
+import logo from "./components/Logopage.jsx";
+import onboarding from "./components/Onboardingpage.jsx";
+import Notifications from "./components/Notificationspage/NotificationScreen.jsx";
 import DoctorDrawerScreen from "./components/DoctorDrawerScreen.jsx";
 import { clientAuth } from "./utils/firebase.js";
 import ToastManager from "toastify-react-native";
@@ -24,10 +24,10 @@ import { signInWithCustomToken } from "firebase/auth";
 import Loading from "./components/Loading.jsx";
 import DoctorDetails from "./components/Details/DoctorDetails";
 import PatientDetails from "./components/Details/PatientDetails";
-import { AppRegistry } from 'react-native';
-import { name as appName } from './app.json';
+import { AppRegistry } from "react-native";
+import { name as appName } from "./app.json";
+import { StatusBar } from "expo-status-bar";
 // import './global.css';
-
 
 AppRegistry.registerComponent(appName, () => App);
 
@@ -47,13 +47,13 @@ const App = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [emailVerified, setEmailVerified] = useState(true);
   const [loading, setLoading] = useState(true);
-
+  <StatusBar style="auto" />;
   const getToken = async () => {
     const token = await AsyncStorage.getItem("doc-qToken");
     if (token) {
       try {
         await signInWithCustomToken(clientAuth, JSON.parse(token));
-      } catch (err) { }
+      } catch (err) {}
     }
 
     clientAuth.onAuthStateChanged(async (user) => {
@@ -62,10 +62,8 @@ const App = () => {
         const claims = (await user.getIdTokenResult()).claims;
         setEmailVerified(claims?.email_verified);
         setUserInfo(claims?.info);
-        if (claims.role === 'doctor')
-          setIsDoctor(true);
-        else
-          setIsDoctor(false);
+        if (claims.role === "doctor") setIsDoctor(true);
+        else setIsDoctor(false);
         setUser(user);
         setLoading(false);
       } else {
@@ -81,10 +79,8 @@ const App = () => {
         const claims = (await user.getIdTokenResult()).claims;
         setEmailVerified(claims?.email_verified);
         setUserInfo(claims?.info);
-        if (claims.role === 'doctor')
-          setIsDoctor(true);
-        else
-          setIsDoctor(false);
+        if (claims.role === "doctor") setIsDoctor(true);
+        else setIsDoctor(false);
         setUser(user);
         setLoading(false);
       } else {
@@ -93,35 +89,41 @@ const App = () => {
         setLoading(false);
       }
     });
-  }
+  };
 
   useEffect(() => {
     getToken();
   }, []);
 
-  if (loading)
-    return <Loading />
+  if (loading) return <Loading />;
 
   return (
     <>
-      {(user && !emailVerified) ? (
+      {user && !emailVerified ? (
         <>
           <NavigationContainer>
             <Tab.Navigator>
-              <Tab.Screen name="EmailVerification" component={EmailVerification} />
+              <Tab.Screen
+                name="EmailVerification"
+                component={EmailVerification}
+              />
               <Tab.Screen name="LogOut" component={Logout} />
             </Tab.Navigator>
           </NavigationContainer>
         </>
-      ) : (user && emailVerified && !userInfo) ? (
+      ) : user && emailVerified && !userInfo ? (
         <NavigationContainer>
           <Tab.Navigator>
-            {isDoctor && <Tab.Screen name="DoctorDetails" component={DoctorDetails} />}
-            {!isDoctor && <Tab.Screen name="PatientDetails" component={PatientDetails} />}
+            {isDoctor && (
+              <Tab.Screen name="DoctorDetails" component={DoctorDetails} />
+            )}
+            {!isDoctor && (
+              <Tab.Screen name="PatientDetails" component={PatientDetails} />
+            )}
             <Tab.Screen name="LogOut" component={Logout} />
           </Tab.Navigator>
         </NavigationContainer>
-      ) : (user && isDoctor) ? (
+      ) : user && isDoctor ? (
         <DoctorDrawerScreen />
       ) : (
         (!user || (user && !isDoctor)) && (
@@ -130,17 +132,22 @@ const App = () => {
               screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
                   let iconName;
-                  if (route.name === 'Home') {
+                  if (route.name === "Home") {
                     // if (route.name === 'settings') {
                     // iconName = focused ? 'settings' : 'home-outline';
-                    iconName = focused ? 'home' : 'home-outline';
-                  } else if (route.name === 'Search') {
-                    iconName = focused ? 'search' : 'search-outline';
-                  } else if (route.name === 'Notifications') {
-                  // } else if (route.name === 'editProfile') {
-                    iconName = focused ? 'notifications' : 'notifications-outline';
-                  } else if (route.name === 'Profile' || route.name === 'Sign In') {
-                    iconName = focused ? 'person' : 'person-outline';
+                    iconName = focused ? "home" : "home-outline";
+                  } else if (route.name === "Search") {
+                    iconName = focused ? "search" : "search-outline";
+                  } else if (route.name === "Notifications") {
+                    // } else if (route.name === 'editProfile') {
+                    iconName = focused
+                      ? "notifications"
+                      : "notifications-outline";
+                  } else if (
+                    route.name === "Profile" ||
+                    route.name === "Sign In"
+                  ) {
+                    iconName = focused ? "person" : "person-outline";
                   }
 
                   return (
@@ -149,13 +156,13 @@ const App = () => {
                     </View>
                   );
                 },
-                tabBarActiveTintColor: 'teal',
-                tabBarInactiveTintColor: 'gray',
+                tabBarActiveTintColor: "teal",
+                tabBarInactiveTintColor: "gray",
                 tabBarStyle: {
                   height: 70,
                   paddingVertical: 10,
                   borderTopWidth: 1,
-                  borderTopColor: 'lightgray',
+                  borderTopColor: "lightgray",
                 },
                 tabBarIconStyle: {
                   marginTop: 5,
@@ -182,7 +189,7 @@ const App = () => {
 
 const styles = StyleSheet.create({
   focusedIconContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
     borderRadius: 30,
     padding: 10,
   },
